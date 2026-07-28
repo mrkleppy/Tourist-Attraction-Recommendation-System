@@ -1,3 +1,5 @@
+package Class;
+
 public class Attraction {
     private String name;
     private City city;

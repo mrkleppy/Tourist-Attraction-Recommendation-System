@@ -1,3 +1,5 @@
+package Class;
+
 public enum State {
     PERLIS,
     KEDAH,
