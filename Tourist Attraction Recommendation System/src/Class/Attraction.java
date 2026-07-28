@@ -29,4 +29,23 @@ public class Attraction {
     public void setCity(City city){
         this.city = city;
     }
+    
+    @Override
+    public String toString() {
+        return getName() + "," + getCity() + "," + getCity().getState();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+        
+        Attraction attraction = (Attraction)obj;
+        return this.getName().equals(attraction.getName());
+    }
 }

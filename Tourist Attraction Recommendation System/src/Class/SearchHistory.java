@@ -9,7 +9,7 @@ public class SearchHistory {
         this.state = null;
     }
 
-    public SearchHistory(Member member) {
+    public SearchHistory(Member member, State state) {
         this.member = member;
         this.state = state;
     }
