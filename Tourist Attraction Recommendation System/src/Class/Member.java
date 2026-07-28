@@ -1,3 +1,5 @@
+package Class;
+
 public class Member extends User {
     private SearchHistory searchHistory;
 

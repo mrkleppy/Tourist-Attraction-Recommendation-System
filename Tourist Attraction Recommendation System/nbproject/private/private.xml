@@ -3,12 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Jarrett/Documents/GitHub/Tourist-Attraction-Recommendation-System/Tourist%20Attraction%20Recommendation%20System/src/UI/Main.java</file>
-            <file>file:/C:/Users/Jarrett/Documents/GitHub/Tourist-Attraction-Recommendation-System/Tourist%20Attraction%20Recommendation%20System/src/UI/AdminModuleUI.java</file>
-            <file>file:/C:/Users/Jarrett/Documents/GitHub/Tourist-Attraction-Recommendation-System/Tourist%20Attraction%20Recommendation%20System/src/UI/TouristModuleUI.java</file>
-            <file>file:/C:/Users/Jarrett/Documents/GitHub/Tourist-Attraction-Recommendation-System/Tourist%20Attraction%20Recommendation%20System/src/UI/UI.java</file>
-            <file>file:/C:/Users/Jarrett/Documents/GitHub/Tourist-Attraction-Recommendation-System/Tourist%20Attraction%20Recommendation%20System/src/Data/Credential.csv</file>
-            <file>file:/C:/Users/Jarrett/Documents/GitHub/Tourist-Attraction-Recommendation-System/Tourist%20Attraction%20Recommendation%20System/src/graph/MainTest.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Tourist%20Attraction%20Recommendation%20System/src/Class/City.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Tourist%20Attraction%20Recommendation%20System/src/Class/File.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Tourist%20Attraction%20Recommendation%20System/src/Class/State.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Tourist%20Attraction%20Recommendation%20System/src/Data/Attraction.csv</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Tourist%20Attraction%20Recommendation%20System/src/UI/AdminModuleUI.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Tourist%20Attraction%20Recommendation%20System/src/UI/MainMenuUI.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Tourist%20Attraction%20Recommendation%20System/src/Class/Attraction.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Tourist%20Attraction%20Recommendation%20System/src/Class/Admin.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Tourist%20Attraction%20Recommendation%20System/src/Class/Member.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Tourist%20Attraction%20Recommendation%20System/src/Class/SearchHistory.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Tourist%20Attraction%20Recommendation%20System/src/Class/User.java</file>
         </group>
     </open-files>
 </project-private>

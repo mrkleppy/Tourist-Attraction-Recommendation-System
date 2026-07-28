@@ -1,3 +1,5 @@
+package Class;
+
 public class SearchHistory {
     private Member member; 
 
