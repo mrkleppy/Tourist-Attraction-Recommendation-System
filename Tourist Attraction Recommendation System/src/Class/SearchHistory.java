@@ -2,13 +2,16 @@ package Class;
 
 public class SearchHistory {
     private Member member; 
+    private State state;
 
     public SearchHistory() {
         this.member = null;
+        this.state = null;
     }
 
     public SearchHistory(Member member) {
         this.member = member;
+        this.state = state;
     }
 
     public Member getMember() {
@@ -17,6 +20,14 @@ public class SearchHistory {
  
     public void setMember(Member member) {
         this.member = member;
+    }
+    
+    public State getState() {
+        return state;
+    }
+    
+    public void setState(State state) {
+        this.state = state;
     }
 }
 

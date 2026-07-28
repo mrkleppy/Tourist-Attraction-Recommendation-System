@@ -11,7 +11,6 @@ public class MainMenuUI extends UI {
             String choice = sc.nextLine();
             
             switch (choice) {
-
                 case "1":
                     TouristModuleUI.mainMenuUI();
                     break;
