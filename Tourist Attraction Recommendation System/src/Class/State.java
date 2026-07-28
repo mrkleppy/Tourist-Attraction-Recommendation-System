@@ -13,5 +13,9 @@ public enum State {
     PAHANG,
     JOHOR,
     SABAH,
-    SARAWAK
+    SARAWAK;
+    
+    public String calculateTotalCity() {
+        return this.toString();
+    }
 }
