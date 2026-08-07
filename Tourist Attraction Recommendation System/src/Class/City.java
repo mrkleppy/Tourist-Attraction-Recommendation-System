@@ -40,7 +40,7 @@ public class City {
     public void setTotalAttraction(int totalAttraction) {
         this.totalAttraction = totalAttraction;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
