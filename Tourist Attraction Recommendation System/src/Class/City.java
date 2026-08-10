@@ -1,5 +1,7 @@
 package Class;
 
+import java.util.Objects;
+
 public class City {
     private String name;
     private State state;
@@ -9,6 +11,11 @@ public class City {
         this.name = "";
         this.state = null;
         this.totalAttraction = 0;
+    }
+
+    public City(String name, State state) {
+        this.name = name;
+        this.state = state;
     }
 
     public City(String name, State state, int totalAttraction){
@@ -40,7 +47,7 @@ public class City {
     public void setTotalAttraction(int totalAttraction) {
         this.totalAttraction = totalAttraction;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -53,5 +60,10 @@ public class City {
         
         City city = (City)obj;
         return this.getName().equals(city.getName());
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

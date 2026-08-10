@@ -1,82 +1,110 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package graph;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.HashSet;
+import Class.*;
+import java.util.*;
 
 public class Graph { 
     private Map<String, Vertex> vertices = new HashMap<>();
     private Map<String, List<Edge>> adjList = new HashMap<>();
-    private Map<String, List<String>> attractionCache = new HashMap<>();
+    private Map<String, Attraction> attractionByName = new HashMap<>();
+
+    // Normalize keys to uppercase so searches are case-insensitive
+    private String normalize(String input) {
+        return input == null ? "" : input.trim().toUpperCase();
+    }
 
     public void addVertex(String name, String type) {
-        vertices.putIfAbsent(name, new Vertex(name, type));
-        adjList.putIfAbsent(name, new ArrayList<>());
+        String key = normalize(name);
+        vertices.putIfAbsent(key, new Vertex(name, type.toUpperCase()));
+        adjList.putIfAbsent(key, new ArrayList<>());
     }
 
-    public void addEdge(String v1, String v2, int weight) {
-        addVertex(v1, "UNKNOWN");
-        addVertex(v2, "UNKNOWN");
-        adjList.get(v1).add(new Edge(v2, weight));
-        adjList.get(v2).add(new Edge(v1, weight)); // undirected
+    public void addEdge(String v1, String v1Type, String v2, String v2Type, int weight) {
+        addVertex(v1, v1Type);
+        addVertex(v2, v2Type);
+
+        String k1 = normalize(v1);
+        String k2 = normalize(v2);
+
+        adjList.get(k1).add(new Edge(v1, v1Type, v2, v2Type, weight));
+        adjList.get(k2).add(new Edge(v2, v2Type, v1, v1Type, weight)); // Undirected
     }
-    
-    public List<String> getAttractionsByState(String stateName) {
-        if (attractionCache.containsKey(stateName)) {
-            return attractionCache.get(stateName);
+
+    public void loadGraph() {
+        List<City> cities = File.readCityFile();
+        List<Attraction> attractions = File.readAttractionFile(attractionByName);
+
+        // Add States
+        for (State state : State.values()) {
+            addVertex(state.toString(), "STATE");
         }
 
-        List<String> attractions = new ArrayList<>();
-        if (!vertices.containsKey(stateName)) return attractions;
+        // Add Cities and link City <-> State
+        for (City city : cities) {
+            addVertex(city.getName(), "CITY");
+            // Edge between City name and State name
+            addEdge(city.getName(), "CITY", city.getState().toString(), "STATE", 0);
+        }
+
+        // Add Attractions and link Attraction <-> City
+        for (Attraction attraction : attractions) {
+            addVertex(attraction.getName(), "ATTRACTION");                      
+            String cityName = attraction.getCity().getName();             
+            addEdge(attraction.getName(), "ATTRACTION", cityName, "CITY", 0);
+        }
+    }
+
+    public List<Attraction> getAttractionsByState(String stateName) {
+        System.out.println("DEBUG: Input state: '" + stateName + "'");
+        System.out.println("DEBUG: Known vertices keys: " + vertices.keySet());
+        List<Attraction> attractions = new ArrayList<>();
+        String startKey = normalize(stateName);
+
+        if (!vertices.containsKey(startKey)) {
+            return attractions; // State not found
+        }
 
         Set<String> visited = new HashSet<>();
         Queue<String> queue = new LinkedList<>();
 
-        visited.add(stateName);
-        queue.add(stateName);
+        visited.add(startKey);
+        queue.add(startKey);
 
         while (!queue.isEmpty()) {
-            String current = queue.poll();
-            Vertex v = vertices.get(current);
+            String currentKey = queue.poll();
+            Vertex vertex = vertices.get(currentKey);
 
-            if (v != null && "ATTRACTION".equalsIgnoreCase(v.type)) {
-                attractions.add(current);
+            if (vertex != null && "ATTRACTION".equals(vertex.getType())) {
+                // Find attraction using stored original name
+                Attraction attraction = attractionByName.get(vertex.getName());
+                if (attraction != null) {
+                    attractions.add(attraction);
+                }
             }
 
-            for (Edge edge : adjList.getOrDefault(current, Collections.emptyList())) {
-                String neighbor = edge.to;
-                if (!visited.contains(neighbor)) {
-                    visited.add(neighbor);
-                    queue.add(neighbor);
+            for (Edge edge : adjList.getOrDefault(currentKey, Collections.emptyList())) {
+                String neighborKey = normalize(edge.getTo());
+
+                if (visited.add(neighborKey)) {
+                    queue.add(neighborKey);
                 }
             }
         }
 
-        attractionCache.put(stateName, attractions);
+        return attractions;
+    }
+    
+    public List<Attraction> getAttractionsByHistory(SearchHistory searchHistory) {
+        List<Attraction> attractions = new ArrayList<>();
+        
+        // Need to do something to avoid redundant result in the list and dont break the sequence
+        for (State state : searchHistory.getStates()) {
+            attractions.addAll(getAttractionsByState(state.name()));
+        }
+        
         return attractions;
     }
 
-    public Map<String, List<String>> getAttractionsForHistory(List<String> searchHistory) {
-        Map<String, List<String>> result = new LinkedHashMap<>();
-
-        for (String state : searchHistory) {
-            result.put(state, getAttractionsByState(state));
-        }
-
-        return result;
-    }
-    
     public List<String> findRouteToAttraction(String startState, String targetAttraction) {
         List<String> route = new ArrayList<>();
         if (!vertices.containsKey(startState) || !vertices.containsKey(targetAttraction)) {
@@ -99,9 +127,9 @@ public class Graph {
             }
 
             for (Edge edge : adjList.getOrDefault(current, Collections.emptyList())) {
-                String neighbor = edge.to;
+                String neighbor = edge.getTo();
                 
-                if (edge.weight == 0) {
+                if (edge.getWeight()== 0) {
                     continue;
                 }
                 
@@ -126,5 +154,3 @@ public class Graph {
         return route;
     }
 }
-
-

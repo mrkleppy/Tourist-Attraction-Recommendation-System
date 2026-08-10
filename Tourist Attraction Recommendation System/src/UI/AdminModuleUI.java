@@ -2,30 +2,7 @@ package UI;
 
 public class AdminModuleUI extends UI {
 
-    public static void loginUI() {
-
-        clearScreen();
-        do {
-            System.out.print("'q' to exit\nUsername: ");
-            String username = sc.nextLine();
-
-            if (username.equalsIgnoreCase("q")) {
-                return;
-            };
-
-            // TODO: admin validation
-
-            System.out.print("Password: ");
-            String password = sc.nextLine();
-
-            // TODO: password validation
-
-            mainMenuUI();
-        } while (true);
-
-    }
-
-    public static void mainMenuUI() {
+    public static void adminMenuUI() {
 
         clearScreen();
         do {
@@ -51,6 +28,7 @@ public class AdminModuleUI extends UI {
                     viewAttractionUI();
                     break;
                 case "0":
+                    clearScreen();
                     return;
                 default:
                     clearScreen();
