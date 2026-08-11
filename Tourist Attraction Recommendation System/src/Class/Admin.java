@@ -1,5 +1,7 @@
 package Class;
 
+import java.util.Objects;
+
 public class Admin extends User {
     public Admin() {
         super("", "");
@@ -26,5 +28,10 @@ public class Admin extends User {
         
         Admin admin = (Admin)obj;
         return this.getUsername().equals(admin.getUsername());
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getUsername());
     }
 }

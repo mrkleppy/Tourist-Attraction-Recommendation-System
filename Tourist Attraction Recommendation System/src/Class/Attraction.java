@@ -1,5 +1,7 @@
 package Class;
 
+import java.util.Objects;
+
 public class Attraction {
     private String name;
     private City city;
@@ -32,7 +34,7 @@ public class Attraction {
     
     @Override
     public String toString() {
-        return getName() + "," + getCity() + "," + getCity().getState();
+        return getName() + "," + getCity().getName() + "," + getCity().getState();
     }
     
     @Override
@@ -47,5 +49,10 @@ public class Attraction {
         
         Attraction attraction = (Attraction)obj;
         return this.getName().equals(attraction.getName());
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

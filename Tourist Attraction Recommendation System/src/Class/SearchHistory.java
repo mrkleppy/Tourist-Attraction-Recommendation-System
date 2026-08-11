@@ -2,16 +2,16 @@ package Class;
 
 public class SearchHistory {
     private Member member; 
-    private State state;
+    private State[] states;
 
     public SearchHistory() {
         this.member = null;
-        this.state = null;
+        this.states = null;
     }
 
-    public SearchHistory(Member member, State state) {
+    public SearchHistory(Member member, State[] states) {
         this.member = member;
-        this.state = state;
+        this.states = states;
     }
 
     public Member getMember() {
@@ -22,12 +22,12 @@ public class SearchHistory {
         this.member = member;
     }
     
-    public State getState() {
-        return state;
+    public State[] getStates() {
+        return states;
     }
     
-    public void setState(State state) {
-        this.state = state;
+    public void setStates(State[] states) {
+        this.states = states;
     }
 }
 
