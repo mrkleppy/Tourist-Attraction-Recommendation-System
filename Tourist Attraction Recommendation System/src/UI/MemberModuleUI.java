@@ -1,9 +1,5 @@
 package UI;
 
-import Class.*;
-import graph.Graph;
-import java.util.List;
-
 public class MemberModuleUI extends UI {
     public static void memberMenuUI() {
         clearScreen();
@@ -32,16 +28,12 @@ public class MemberModuleUI extends UI {
 
     public static void stateRecommendationsUI() {
         clearScreen();
-        
-        Graph graph = new Graph();
-        graph.loadGraph();
-        
-        while (true) {
-            System.out.println("\nEnter 'q' to go back...");
+        do {
+            System.out.println("Enter q to go back...");
             System.out.print("Enter a state: ");
-            String stateInput = sc.nextLine().trim();
+            String state = sc.nextLine();
 
-            if (stateInput.equalsIgnoreCase("q")) {
+            if (state.equalsIgnoreCase("q")) {
                 clearScreen();
                 return;
             }
