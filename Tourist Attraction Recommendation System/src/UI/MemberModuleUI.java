@@ -38,33 +38,67 @@ public class MemberModuleUI extends UI {
                 return;
             }
 
-            // TODO: State validation (Match if got state or not)
+            // Validate State Input
+            State matchedState = State.findState(stateInput);
+            if (matchedState == null) {
+                clearScreen();
+                System.out.println("Error: State '" + stateInput + "' not found! Please try again.");
+                continue;
+            }
+                      
+            // Query Attractions for Validated State
+            String stateName = matchedState.toString();
+            List<Attraction> attractions = graph.getAttractionsByState(stateName);
+            System.out.println(attractions); //debug           
 
+            if (attractions.isEmpty()) {
+                System.out.println("No attractions available in " + stateName + ".");
+                continue;
+            }
+                       
+            System.out.println("\nIn " + stateName + ", you can visit:");
+            Member.viewRecommendationByState(attractions);
             
+            do {
+                // Prompt and Validate Selected Attraction
+                System.out.print("\nEnter the attraction name you want to visit (or 'q' to cancel): ");
+                String attractionInput = sc.nextLine().trim();
 
-            // TODO: List all of the available attractions in that state
+                if (attractionInput.equalsIgnoreCase("q")) {
+                    continue;
+                }
 
+                Attraction selectedAttraction = null;
+                for (Attraction a : attractions) {
+                    if (a.getName().equalsIgnoreCase(attractionInput)) {
+                        selectedAttraction = a;
+                        break;
+                    }
+                }
 
+                if (selectedAttraction == null) {
+                    clearScreen();
+                    System.out.println("Error: Attraction '" + attractionInput + "' is not listed in " + stateName + "!");
+                    continue;
+                }
 
-            System.out.print("Is there an attraction you want to go in " + state + "?:");
-            String attraction = sc.nextLine();
+                // Prompt and Validate User's Current Location
+                System.out.print("What state are you currently in? ");
+                String userLocationInput = sc.nextLine().trim();
 
-            // TODO: Check if attraction is inside the list
+                State userState = State.findState(userLocationInput);
+                if (userState == null) {
+                    clearScreen();
+                    System.out.println("Error: Current state '" + userLocationInput + "' not found!");
+                    continue;
+                }
 
-            System.out.print("What state are you currently in? ");
-            String userLocation = sc.nextLine();
-
-            // TODO: State validation for userLocation
-
-
-
-            // TODO: substring the entire location into a full variable named location, the variable will store Attraction, City, State
-
-            String location = userLocation; // temporary
-            locationGetterUI(location, userLocation);
-
-        } while(true);
-    }
+                // Proceed to Location Route Processing
+                String targetLocation = selectedAttraction.toString(); // e.g. Attraction, City, State format
+                locationGetterUI(targetLocation, userState.toString());
+            } while (true);
+        }
+    } 
 
     public static void locationGetterUI(String location, String userLocation) {
         clearScreen();

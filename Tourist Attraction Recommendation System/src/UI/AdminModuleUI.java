@@ -1,5 +1,7 @@
 package UI;
 
+import Class.*;
+
 public class AdminModuleUI extends UI {
 
     public static void adminMenuUI() {
@@ -41,18 +43,39 @@ public class AdminModuleUI extends UI {
 
     public static void addCityUI() {
         clearScreen();
-        System.out.println("Add city");
+        do {
+            System.out.println("Add city");
 
-        // TODO: UI and everything
+            // TODO: UI and everything
+            System.out.print("City name: ");
+            String cityInput = sc.nextLine();
+            System.out.print("State name: ");
+            String stateInput = sc.nextLine();
 
+            State matchedState = State.findState(stateInput);
+            if (matchedState == null) {
+                clearScreen();
+                System.out.println("Error: Current state '" + stateInput + "' not found!");
+                continue;
+            }
+            
+            City city = new City(cityInput, matchedState);
+            File.AppendCityFile(city);
+            
+            clearScreen();
+            System.out.printf("%s is now in %s!\n", city.getName(), matchedState.toString());
+            return;
+        } while (true);
     }
 
     public static void removeCityUI() {
         clearScreen();
-        System.out.println("Remove city");
-
-        // TODO: UI and everything
-
+        do {
+            System.out.println("Remove city");
+            
+            // TODO: UI and everything
+            
+        } while (true);
     }
 
     public static void addAttractionUI() {
