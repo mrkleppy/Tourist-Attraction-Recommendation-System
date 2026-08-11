@@ -1,9 +1,5 @@
 package UI;
 
-import Class.*;
-import graph.Graph;
-import java.util.List;
-
 public class MemberModuleUI extends UI {
     public static void memberMenuUI() {
         clearScreen();
@@ -32,87 +28,42 @@ public class MemberModuleUI extends UI {
 
     public static void stateRecommendationsUI() {
         clearScreen();
-        
-        Graph graph = new Graph();
-        graph.loadGraph();
-        
-        while (true) {
-            System.out.println("\nEnter 'q' to go back...");
+        do {
+            System.out.println("Enter q to go back...");
             System.out.print("Enter a state: ");
-            String stateInput = sc.nextLine().trim();
+            String state = sc.nextLine();
 
-            if (stateInput.equalsIgnoreCase("q")) {
+            if (state.equalsIgnoreCase("q")) {
                 clearScreen();
                 return;
             }
 
-            // Validate State Input
-            State matchedState = findState(stateInput);
-            if (matchedState == null) {
-                clearScreen();
-                System.out.println("Error: State '" + stateInput + "' not found! Please try again.");
-                continue;
-            }
+            // TODO: State validation (Match if got state or not)
 
-            // Query Attractions for Validated State
-            String stateName = matchedState.toString();
-            List<Attraction> attractions = graph.getAttractionsByState(stateName);
-            System.out.println(attractions); //debug           
+            
 
-            if (attractions.isEmpty()) {
-                System.out.println("No attractions available in " + stateName + ".");
-                continue;
-            }
+            // TODO: List all of the available attractions in that state
 
-            System.out.println("\nIn " + stateName + ", you can visit:");
-            Member.viewRecommendationByState(attractions);
 
-            // Prompt and Validate Selected Attraction
-            System.out.print("\nEnter the attraction name you want to visit (or 'q' to cancel): ");
-            String attractionInput = sc.nextLine().trim();
 
-            if (attractionInput.equalsIgnoreCase("q")) {
-                continue;
-            }
+            System.out.print("Is there an attraction you want to go in " + state + "?:");
+            String attraction = sc.nextLine();
 
-            Attraction selectedAttraction = null;
-            for (Attraction a : attractions) {
-                if (a.getName().equalsIgnoreCase(attractionInput)) {
-                    selectedAttraction = a;
-                    break;
-                }
-            }
+            // TODO: Check if attraction is inside the list
 
-            if (selectedAttraction == null) {
-                clearScreen();
-                System.out.println("Error: Attraction '" + attractionInput + "' is not listed in " + stateName + "!");
-                continue;
-            }
-
-            // Prompt and Validate User's Current Location
             System.out.print("What state are you currently in? ");
-            String userLocationInput = sc.nextLine().trim();
+            String userLocation = sc.nextLine();
 
-            State userState = findState(userLocationInput);
-            if (userState == null) {
-                clearScreen();
-                System.out.println("Error: Current state '" + userLocationInput + "' not found!");
-                continue;
-            }
+            // TODO: State validation for userLocation
 
-            // Proceed to Location Route Processing
-            String targetLocation = selectedAttraction.toString(); // e.g. Attraction, City, State format
-            locationGetterUI(targetLocation, userState.toString());
-        }
-    }
 
-    private static State findState(String input) {
-        for (State s : State.values()) {
-            if (s.name().equalsIgnoreCase(input) || s.toString().equalsIgnoreCase(input)) {
-                return s;
-            }
-        }
-        return null;
+
+            // TODO: substring the entire location into a full variable named location, the variable will store Attraction, City, State
+
+            String location = userLocation; // temporary
+            locationGetterUI(location, userLocation);
+
+        } while(true);
     }
 
     public static void locationGetterUI(String location, String userLocation) {
