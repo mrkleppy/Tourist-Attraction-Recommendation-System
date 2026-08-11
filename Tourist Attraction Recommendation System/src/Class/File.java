@@ -1,38 +1,29 @@
 package Class;
 
+import java.io.BufferedWriter;
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class File {
-    private static BufferedReader getResourceReader(String filename) {
-        // Leading '/' tells Java to search relative to the root classpath: /Data/City.csv
-        String resourcePath = "/Data/" + filename;
-        InputStream is = File.class.getResourceAsStream(resourcePath);
-
-        if (is == null) {
-            System.err.println("ERROR: Could not find resource at classpath: " + resourcePath);
-            return null;
-        }
-
-        return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-    }
 
     public static List<City> readCityFile() {
         List<City> cities = new ArrayList<>();
+        Path path = Paths.get("Data", "City.csv");
 
-        try (BufferedReader reader = getResourceReader("City.csv")) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
             if (reader == null) return cities;
 
             String line;
             
             while ((line = reader.readLine()) != null) {
-                if (line.isBlank()) continue;              
+                if (line.isBlank()) continue;               
 
                 // Split on comma and trim whitespace
                 String[] parts = line.split(",");
@@ -66,8 +57,10 @@ public class File {
     public static List<Attraction> readAttractionFile(Map<String, Attraction> attractionByName) {
         List<City> cities = readCityFile();
         List<Attraction> attractions = new ArrayList<>();
+        // Fixed: pointed to Attraction.csv instead of City.csv
+        Path path = Paths.get("Data", "Attraction.csv");
 
-        try (BufferedReader reader = getResourceReader("Attraction.csv")) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
             if (reader == null) return attractions;
 
             String line;
@@ -75,7 +68,7 @@ public class File {
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) continue;
                 
-                if (firstLine && (line.toLowerCase().startsWith("attractionName"))) {
+                if (firstLine && (line.toLowerCase().startsWith("attractionname"))) {
                     firstLine = false;
                     continue;
                 }
@@ -118,5 +111,30 @@ public class File {
         }
 
         return attractions;
+    }
+    
+    public static void AppendCityFile(City city) {
+        Path path = Paths.get("Data", "City.csv");
+        // Formats city output explicitly as "CityName,StateName"
+        String contentToAppend = city.getName() + "," + city.getState();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile(), true))) {
+            writer.write(contentToAppend);
+            writer.newLine(); 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void AppendAttractionFile(Attraction attraction) {
+        Path path = Paths.get("Data", "Attraction.csv");
+        String contentToAppend = attraction.getName() + "," + attraction.getCity().getName();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile(), true))) {
+            writer.write(contentToAppend);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
