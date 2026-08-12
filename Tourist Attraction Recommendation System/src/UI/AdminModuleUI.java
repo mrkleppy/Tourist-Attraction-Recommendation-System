@@ -2,9 +2,15 @@ package UI;
 
 import Class.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 public class AdminModuleUI extends UI {
 
-    public static void adminMenuUI() {
+    public static void adminMenuUI(List<User> users, List<City> cities) {
 
         clearScreen();
         do {
@@ -27,7 +33,7 @@ public class AdminModuleUI extends UI {
                     removeAttractionUI();
                     break;
                 case "5":
-                    viewAttractionUI();
+                    viewAttractionUI(cities);
                     break;
                 case "0":
                     clearScreen();
@@ -94,12 +100,84 @@ public class AdminModuleUI extends UI {
 
     }
 
-    public static void viewAttractionUI() {
+    public static void viewAttractionUI(List<City> cities) {
         clearScreen();
-        System.out.println("View attraction");
 
-        // TODO: UI and everything
+        State selectedState = null;
+        do {
+            System.out.println(underline + "View attractions" + reset);
+            
+            for (State state : State.values()) {
+                System.out.println(State.formatStateName(state));
+            }
 
+            System.out.print("\nEnter a state to view every attractions in it: ");
+            String stateInput = sc.nextLine().trim();
+
+            if (stateInput.equalsIgnoreCase("q")) {
+                clearScreen();
+                return;
+            }
+
+            selectedState = State.findState(stateInput);
+            if (selectedState == null) {
+                clearScreen();
+                System.out.println("Error: State '" + stateInput + "' not found! Please try again.");
+                continue;
+            }
+
+            break;
+        } while(true);
+        
+        do {
+            Map<String, Attraction> attractionByName = new HashMap<>();
+            List<Attraction> attractions = File.readAttractionFile(attractionByName);
+            
+            Map<City, List<Attraction>> cityAttractions = new LinkedHashMap<>();
+
+            // Only cities from the selected state
+            for (City city : cities) {
+                if (city.getState() == selectedState) {
+                    cityAttractions.put(city, new ArrayList<>());
+                }
+            }
+
+            // Put attractions into the matching cities
+            for (Attraction attraction : attractions) {
+                City attractionCity = attraction.getCity();
+
+                for (City city : cityAttractions.keySet()) {
+                    if (city.equals(attractionCity)) {
+                        cityAttractions.get(city).add(attraction);
+                        break;
+                    }
+                }
+            }
+
+            clearScreen();
+            String stateName = State.formatStateName(selectedState);
+            System.out.println(underline + "Attractions in " + stateName + reset + " (" + cityAttractions.size() + " cities)");
+
+            for (Map.Entry<City, List<Attraction>> entry : cityAttractions.entrySet()) {
+                City city = entry.getKey();
+                List<Attraction> attractionList = entry.getValue();
+                
+                System.out.println(" " + underline + city.getName() + reset + " (" + attractionList.size() + " attractions)");
+            
+                if (attractionList.isEmpty()) {
+                    System.out.println("  - No attractions available.");
+                } else {
+                    for (Attraction attraction : attractionList) {
+                        System.out.println("  - " + attraction.getName());
+                    }
+                }
+            }
+            
+            System.out.print("\nPress Enter to go back...");
+            sc.nextLine();
+            viewAttractionUI(cities);
+            break;
+        } while(true);
     }
 }
 

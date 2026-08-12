@@ -6,13 +6,13 @@ import java.util.Iterator;
 
 public class Member extends User {    
     public Member() {
-        super("", "");
+        super("", "", "member");
     }
 
     public Member(String username, String password) {
-        super(username, password);
+        super(username, password, "member");
     }
-    
+
     public static void viewRecommendationByState(List<Attraction> attractions) {    
         Iterator<Attraction> it = attractions.iterator();
 

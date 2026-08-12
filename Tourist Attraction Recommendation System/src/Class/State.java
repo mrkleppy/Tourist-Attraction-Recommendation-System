@@ -27,4 +27,14 @@ public enum State {
         }
         return null;
     }
+
+    public static String formatStateName(State state) {
+        switch (state) {
+            case NEGERISEMBILAN:
+                return "Negeri Sembilan";
+            default:
+                String lower = state.name().toLowerCase();
+                return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
+        }
+    }
 }

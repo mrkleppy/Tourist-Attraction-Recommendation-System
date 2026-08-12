@@ -3,15 +3,18 @@ package Class;
 public abstract class User {
     private String username;
     private String password;
+    private String role;
 
     public User() {
         this.username = "";
         this.password = "";
+        this.role = "";
     }
 
-    public User(String username, String password) {
+    public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
     public String getUsername() {
@@ -29,9 +32,17 @@ public abstract class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
-        return getUsername() + "," + getPassword();
+        return getUsername() + "," + getPassword() + "," + getRole();
     }
 }
