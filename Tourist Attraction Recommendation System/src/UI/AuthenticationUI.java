@@ -1,7 +1,10 @@
 package UI;
 
+import Class.*;
+import java.util.List;
+
 public class AuthenticationUI extends UI{
-    public static void loginMenuUI() {
+    public static void loginMenuUI(List<User> users, List<City> cities) {
         clearScreen();
         do {
             System.out.println("Welcome to Malaysia Tourist Attraction Recommendations!");
@@ -11,13 +14,13 @@ public class AuthenticationUI extends UI{
             
             switch (choice) {
                 case "1":
-                    memberLoginUI();
+                    memberLoginUI(users, cities);
                     break;
                 case "2":
-                    adminLoginUI();
+                    adminLoginUI(users, cities);
                     break;
                 case "3":
-                    registerMemberUI();
+                    registerMemberUI(users);
                     break;
                 case "0":
                     clearScreen();
@@ -31,7 +34,7 @@ public class AuthenticationUI extends UI{
         } while(true);
     }
 
-    public static void memberLoginUI() {
+    public static void memberLoginUI(List<User> users, List<City> cities) {
         clearScreen();
         do {
             System.out.println("Member Login");
@@ -45,19 +48,17 @@ public class AuthenticationUI extends UI{
             System.out.print("Enter password: ");
             String password = sc.nextLine();
 
-            // TODO : Link to file to check if the username and password are correct and validations
-            if (username.equals("member") && password.equals("password")) {
+            if (Authentication.validateLogin(users, username, password, "member")) {
                 System.out.println("Login successful!");
                 MemberModuleUI.memberMenuUI();
             } else {
                 clearScreen();
                 System.out.println("Invalid credentials. Please try again.");
             }
-            break;
         } while(true);
     }
 
-    public static void adminLoginUI() {
+    public static void adminLoginUI(List<User> users, List<City> cities) {
         clearScreen();
         do {
             System.out.println("Admin Login");
@@ -71,18 +72,17 @@ public class AuthenticationUI extends UI{
             System.out.print("Enter password: ");
             String password = sc.nextLine();
 
-            if (username.equals("admin") && password.equals("admin")) {
+            if (Authentication.validateLogin(users, username, password, "admin")) {
                 System.out.println("Login successful!");
-                AdminModuleUI.adminMenuUI();
+                AdminModuleUI.adminMenuUI(users, cities);
             } else {
                 clearScreen();
                 System.out.println("Invalid credentials. Please try again.");
             }
-            break;
         } while(true);
     }
 
-    public static void registerMemberUI() {
+    public static void registerMemberUI(List<User> users) {
         clearScreen();
         do {
             System.out.println("Register as Member");
@@ -96,7 +96,15 @@ public class AuthenticationUI extends UI{
             System.out.print("Enter password: ");
             String password = sc.nextLine();
 
-            // TODO : Link to file to save the new member's credentials and validations
+            if (Authentication.registerMember(users, username, password)) {
+                clearScreen();
+                System.out.println("Registration successful! You can now log in.");
+                break;
+            } else {
+                clearScreen();
+                System.out.println("Username already exists. Please try again.");
+            }
+
             System.out.println("Registration successful! You can now log in.");
             break;
         } while(true);

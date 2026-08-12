@@ -1,5 +1,9 @@
 package UI;
 
+import Class.*;
+import graph.*;
+import java.util.List;
+
 public class MemberModuleUI extends UI {
     public static void memberMenuUI() {
         clearScreen();
@@ -31,9 +35,9 @@ public class MemberModuleUI extends UI {
         do {
             System.out.println("Enter q to go back...");
             System.out.print("Enter a state: ");
-            String state = sc.nextLine();
+            String stateInput = sc.nextLine();
 
-            if (state.equalsIgnoreCase("q")) {
+            if (stateInput.equalsIgnoreCase("q")) {
                 clearScreen();
                 return;
             }
@@ -97,7 +101,7 @@ public class MemberModuleUI extends UI {
                 String targetLocation = selectedAttraction.toString(); // e.g. Attraction, City, State format
                 locationGetterUI(targetLocation, userState.toString());
             } while (true);
-        }
+        } while (true);
     } 
 
     public static void locationGetterUI(String location, String userLocation) {
