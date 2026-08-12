@@ -44,12 +44,11 @@ public class File {
                     continue;
                 }
 
-                // Case-insensitive state matching
-                for (State state : State.values()) {
-                    if (stateInput.equalsIgnoreCase(state.toString()) || stateInput.equalsIgnoreCase(state.name())) {
-                        cities.add(new City(cityName, state));
-                        break;
-                    }
+                State matchedState = State.findState(stateInput);
+                if (matchedState != null) {
+                    cities.add(new City(cityName, matchedState));
+                } else {
+                    System.err.println("WARNING: State '" + stateInput + "' not found for city '" + cityName + "'");
                 }
             }
         } catch (IOException e) {

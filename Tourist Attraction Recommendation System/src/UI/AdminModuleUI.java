@@ -175,8 +175,7 @@ public class AdminModuleUI extends UI {
             
             System.out.print("\nPress Enter to go back...");
             sc.nextLine();
-            viewAttractionUI(cities);
-            break;
+            return;
         } while(true);
     }
 }
