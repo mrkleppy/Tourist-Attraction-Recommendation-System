@@ -1,12 +1,24 @@
 package Class;
 
+import java.util.Objects;
+import java.util.List;
+import java.util.Iterator;
+
 public class Member extends User {    
     public Member() {
-        super("", "");
+        super("", "", "member");
     }
 
     public Member(String username, String password) {
-        super(username, password);
+        super(username, password, "member");
+    }
+
+    public static void viewRecommendationByState(List<Attraction> attractions) {    
+        Iterator<Attraction> it = attractions.iterator();
+
+        while (it.hasNext()) {
+            System.out.printf(" - %s\n", it.next().getName());
+        }     
     }
     
     @Override
@@ -26,5 +38,10 @@ public class Member extends User {
         
         Member member = (Member)obj;
         return this.getUsername().equals(member.getUsername());
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getUsername());
     }
 }
