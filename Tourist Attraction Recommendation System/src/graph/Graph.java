@@ -55,8 +55,6 @@ public class Graph {
     }
 
     public List<Attraction> getAttractionsByState(String stateName) {
-        System.out.println("DEBUG: Input state: '" + stateName + "'");
-        System.out.println("DEBUG: Known vertices keys: " + vertices.keySet());
         List<Attraction> attractions = new ArrayList<>();
         String startKey = normalize(stateName);
 

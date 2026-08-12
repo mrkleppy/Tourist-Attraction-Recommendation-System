@@ -32,7 +32,11 @@ public class MemberModuleUI extends UI {
 
     public static void stateRecommendationsUI() {
         clearScreen();
+        
         do {
+            Graph graph = new Graph();
+            graph.loadGraph();
+            
             System.out.println("Enter q to go back...");
             System.out.print("Enter a state: ");
             String stateInput = sc.nextLine();
@@ -52,8 +56,7 @@ public class MemberModuleUI extends UI {
                       
             // Query Attractions for Validated State
             String stateName = matchedState.toString();
-            List<Attraction> attractions = graph.getAttractionsByState(stateName);
-            System.out.println(attractions); //debug           
+            List<Attraction> attractions = graph.getAttractionsByState(stateName); 
 
             if (attractions.isEmpty()) {
                 System.out.println("No attractions available in " + stateName + ".");
@@ -69,7 +72,8 @@ public class MemberModuleUI extends UI {
                 String attractionInput = sc.nextLine().trim();
 
                 if (attractionInput.equalsIgnoreCase("q")) {
-                    continue;
+                    clearScreen();
+                    break;
                 }
 
                 Attraction selectedAttraction = null;
@@ -90,6 +94,11 @@ public class MemberModuleUI extends UI {
                 System.out.print("What state are you currently in? ");
                 String userLocationInput = sc.nextLine().trim();
 
+                if (userLocationInput.equalsIgnoreCase("q")) {
+                    clearScreen();
+                    break;
+                }
+
                 State userState = State.findState(userLocationInput);
                 if (userState == null) {
                     clearScreen();
@@ -100,6 +109,7 @@ public class MemberModuleUI extends UI {
                 // Proceed to Location Route Processing
                 String targetLocation = selectedAttraction.toString(); // e.g. Attraction, City, State format
                 locationGetterUI(targetLocation, userState.toString());
+                break;
             } while (true);
         } while (true);
     } 
@@ -113,6 +123,7 @@ public class MemberModuleUI extends UI {
 
         System.out.println("Press any key to go back......");
         String anyKey = sc.nextLine();
+        
     }
 
     public static void viewHistoryUI() {

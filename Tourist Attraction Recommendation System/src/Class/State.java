@@ -13,15 +13,21 @@ public enum State {
     PAHANG,
     JOHOR,
     SABAH,
-    SARAWAK;
-    
-    public String calculateTotalCity() {
-        return this.toString();
+    SARAWAK,
+    KUALALUMPUR,
+    PUTRAJAYA;
+
+    private static String normaliseStateInput(String input) {
+        return input == null ? "" : input.trim().replaceAll("\\s+","".toUpperCase());
     }
     
     public static State findState(String input) {
+        String normalisedInput = normaliseStateInput(input);
+
         for (State s : State.values()) {
-            if (s.name().equalsIgnoreCase(input) || s.toString().equalsIgnoreCase(input)) {
+            String normalisedStateName = normaliseStateInput(s.name());
+            String normalisedFormattedStateName = normaliseStateInput(formatStateName(s));
+            if (normalisedStateName.equalsIgnoreCase(normalisedInput) || normalisedFormattedStateName.equalsIgnoreCase(normalisedInput)) {
                 return s;
             }
         }
@@ -32,6 +38,8 @@ public enum State {
         switch (state) {
             case NEGERISEMBILAN:
                 return "Negeri Sembilan";
+            case KUALALUMPUR:
+                return "Kuala Lumpur";
             default:
                 String lower = state.name().toLowerCase();
                 return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
