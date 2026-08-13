@@ -6,9 +6,8 @@ import java.util.List;
 
 public class MemberModuleUI extends UI {
     public static void memberMenuUI() {
-        clearScreen();
         do {
-            System.out.println("Welcome to Malaysia Tourist Attraction Recommendations!");
+            System.out.println(underline + "Welcome to Malaysia Tourist Attraction Recommendations!" + reset);
             System.out.println("\t1. View Recommendations\n\t2. View History\n\t0. Exit");
             System.out.print("Selection: ");
             String choice = sc.nextLine();
@@ -21,35 +20,31 @@ public class MemberModuleUI extends UI {
                     viewHistoryUI();
                     break;
                 case "0":
-                    clearScreen();
                     return;
                 default:
-                    clearScreen();
                     System.out.println("Enter 1, 2, or 0 Only!");
             }
         } while(true);
     }
 
     public static void stateRecommendationsUI() {
-        clearScreen();
         
         do {
             Graph graph = new Graph();
             graph.loadGraph();
             
             System.out.println("Enter q to go back...");
+            System.out.println(underline + "View Recommendations" + reset);
             System.out.print("Enter a state: ");
             String stateInput = sc.nextLine();
 
             if (stateInput.equalsIgnoreCase("q")) {
-                clearScreen();
                 return;
             }
 
             // Validate State Input
             State matchedState = State.findState(stateInput);
             if (matchedState == null) {
-                clearScreen();
                 System.out.println("Error: State '" + stateInput + "' not found! Please try again.");
                 continue;
             }
@@ -72,7 +67,6 @@ public class MemberModuleUI extends UI {
                 String attractionInput = sc.nextLine().trim();
 
                 if (attractionInput.equalsIgnoreCase("q")) {
-                    clearScreen();
                     break;
                 }
 
@@ -85,7 +79,6 @@ public class MemberModuleUI extends UI {
                 }
 
                 if (selectedAttraction == null) {
-                    clearScreen();
                     System.out.println("Error: Attraction '" + attractionInput + "' is not listed in " + stateName + "!");
                     continue;
                 }
@@ -95,13 +88,11 @@ public class MemberModuleUI extends UI {
                 String userLocationInput = sc.nextLine().trim();
 
                 if (userLocationInput.equalsIgnoreCase("q")) {
-                    clearScreen();
                     break;
                 }
 
                 State userState = State.findState(userLocationInput);
                 if (userState == null) {
-                    clearScreen();
                     System.out.println("Error: Current state '" + userLocationInput + "' not found!");
                     continue;
                 }
@@ -115,7 +106,6 @@ public class MemberModuleUI extends UI {
     } 
 
     public static void locationGetterUI(String location, String userLocation) {
-        clearScreen();
         System.out.println("In order to get to " + location + " from " + userLocation);
 
         // TODO: BFS Algorithm that reaches the location and a guide towards the attraction.
@@ -127,8 +117,7 @@ public class MemberModuleUI extends UI {
     }
 
     public static void viewHistoryUI() {
-        clearScreen();
-        System.out.println("View History");
+        System.out.println(underline + "View History" + reset);
 
         // TODO
     }
