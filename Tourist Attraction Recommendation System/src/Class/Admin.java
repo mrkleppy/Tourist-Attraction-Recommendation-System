@@ -1,16 +1,17 @@
 package Class;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Admin extends User {
     public Admin() {
-        super("", "");
+        super("", "", "admin");
     }
 
     public Admin(String username, String password) {
-        super(username, password);
+        super(username, password, "admin");
     }
-    
+
     @Override
     public String toString() {
         return super.toString();

@@ -1,7 +1,14 @@
 package UI;
 
+import java.util.List;
+import Class.*;
+
 public class Main {
+
     public static void main(String[] args) {
-        AuthenticationUI.loginMenuUI();
+        List<User> users = File.readCredentialFile();
+        List<SearchHistory> searchHistories = File.readSearchHistoryFile();
+
+        AuthenticationUI.loginMenuUI(users, searchHistories);
     }
 }

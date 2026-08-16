@@ -1,55 +1,63 @@
 package UI;
 
+import Class.*;
+import graph.*;
+import java.util.List;
+import java.util.ArrayList;
+
 public class MemberModuleUI extends UI {
-    public static void memberMenuUI() {
-        clearScreen();
+    public static void memberMenuUI(List<SearchHistory> searchHistories) {
         do {
-            System.out.println("Welcome to Malaysia Tourist Attraction Recommendations!");
+            System.out.println(underline + "Welcome to Malaysia Tourist Attraction Recommendations!" + reset);
             System.out.println("\t1. View Recommendations\n\t2. View History\n\t0. Exit");
             System.out.print("Selection: ");
             String choice = sc.nextLine();
             
             switch (choice) {
                 case "1":
-                    stateRecommendationsUI();
+                    stateRecommendationsUI(searchHistories);
                     break;
                 case "2":
-                    viewHistoryUI();
+                    viewHistoryUI(searchHistories);
                     break;
                 case "0":
-                    clearScreen();
                     return;
                 default:
-                    clearScreen();
                     System.out.println("Enter 1, 2, or 0 Only!");
             }
         } while(true);
     }
 
-    public static void stateRecommendationsUI() {
-        clearScreen();
+    public static void stateRecommendationsUI(List<SearchHistory> searchHistories) {
+        Graph graph = new Graph();
+        graph.loadGraph();
+            
         do {
             System.out.println("Enter q to go back...");
+            System.out.println(underline + "View Recommendations" + reset);
             System.out.print("Enter a state: ");
-            String state = sc.nextLine();
+            String stateInput = sc.nextLine();
 
-            if (state.equalsIgnoreCase("q")) {
-                clearScreen();
+            if (stateInput.equalsIgnoreCase("q")) {
                 return;
             }
 
             // Validate State Input
             State matchedState = State.findState(stateInput);
             if (matchedState == null) {
-                clearScreen();
                 System.out.println("Error: State '" + stateInput + "' not found! Please try again.");
                 continue;
-            }
+            } else {
+                for (int i = 0; i < searchHistories.size(); i++) {
+                    if (searchHistories.get(i).getMember().getUsername().equals(Authentication.getCurrentUser())) {
+                        Member.updateHistory(searchHistories, i, matchedState);
+                    }
+                }
+            }                        
                       
             // Query Attractions for Validated State
             String stateName = matchedState.toString();
-            List<Attraction> attractions = graph.getAttractionsByState(stateName);
-            System.out.println(attractions); //debug           
+            List<Attraction> attractions = graph.getAttractionsByState(stateName); 
 
             if (attractions.isEmpty()) {
                 System.out.println("No attractions available in " + stateName + ".");
@@ -57,7 +65,7 @@ public class MemberModuleUI extends UI {
             }
                        
             System.out.println("\nIn " + stateName + ", you can visit:");
-            Member.viewRecommendationByState(attractions);
+            Member.viewRecommendation(attractions);
             
             do {
                 // Prompt and Validate Selected Attraction
@@ -65,7 +73,7 @@ public class MemberModuleUI extends UI {
                 String attractionInput = sc.nextLine().trim();
 
                 if (attractionInput.equalsIgnoreCase("q")) {
-                    continue;
+                    break;
                 }
 
                 Attraction selectedAttraction = null;
@@ -77,7 +85,6 @@ public class MemberModuleUI extends UI {
                 }
 
                 if (selectedAttraction == null) {
-                    clearScreen();
                     System.out.println("Error: Attraction '" + attractionInput + "' is not listed in " + stateName + "!");
                     continue;
                 }
@@ -86,35 +93,92 @@ public class MemberModuleUI extends UI {
                 System.out.print("What state are you currently in? ");
                 String userLocationInput = sc.nextLine().trim();
 
+                if (userLocationInput.equalsIgnoreCase("q")) {
+                    break;
+                }
+
                 State userState = State.findState(userLocationInput);
                 if (userState == null) {
-                    clearScreen();
                     System.out.println("Error: Current state '" + userLocationInput + "' not found!");
                     continue;
                 }
 
                 // Proceed to Location Route Processing
-                String targetLocation = selectedAttraction.toString(); // e.g. Attraction, City, State format
-                locationGetterUI(targetLocation, userState.toString());
+                locationGetterUI(selectedAttraction, userState, graph);
+                break;
             } while (true);
-        }
+        } while (true);
     } 
 
-    public static void locationGetterUI(String location, String userLocation) {
-        clearScreen();
-        System.out.println("In order to get to " + location + " from " + userLocation);
+    public static void locationGetterUI(Attraction destination, State start, Graph graph) {
+        System.out.println("In order to get to " + destination.toString() + " from " + start.name());
+        
+        List<String> route = graph.findRouteToAttraction(destination.getName(), start.name());
+        System.out.println(route);
+        Member.viewRoute(route);
 
-        // TODO: BFS Algorithm that reaches the location and a guide towards the attraction.
-
-
-        System.out.println("Press any key to go back......");
-        String anyKey = sc.nextLine();
+        System.out.println("\nPress any key to go back......");
+        sc.nextLine();
+        
     }
 
-    public static void viewHistoryUI() {
-        clearScreen();
-        System.out.println("View History");
+    public static void viewHistoryUI(List<SearchHistory> searchHistories) {
+        Graph graph = new Graph();
+        graph.loadGraph();
+        SearchHistory searchHistory = new SearchHistory();
+        
+        System.out.println(underline + "View History" + reset); // change this title, not that suitable
 
-        // TODO
+        for (int i = 0; i < searchHistories.size(); i++) {
+            if (searchHistories.get(i).getMember().getUsername().equals(Authentication.getCurrentUser())) {
+                searchHistory = searchHistories.get(i);
+            }
+        }
+
+        List<Attraction> attractions = graph.getAttractionsByHistory(searchHistory);
+
+        System.out.println("\nAccording to your history, you can visit:");
+        Member.viewRecommendation(attractions);
+
+        do {
+            // Prompt and Validate Selected Attraction
+            System.out.print("\nEnter the attraction name you want to visit (or 'q' to cancel): ");
+            String attractionInput = sc.nextLine().trim();
+
+            if (attractionInput.equalsIgnoreCase("q")) {
+                break;
+            }
+
+            Attraction selectedAttraction = null;
+            for (Attraction a : attractions) {
+                if (a.getName().equalsIgnoreCase(attractionInput)) {
+                    selectedAttraction = a;
+                    break;
+                }
+            }
+
+            if (selectedAttraction == null) {
+                System.out.println("Error: Attraction '" + attractionInput + "' is not listed!");
+                continue;
+            }
+
+            // Prompt and Validate User's Current Location
+            System.out.print("What state are you currently in? ");
+            String userLocationInput = sc.nextLine().trim();
+
+            if (userLocationInput.equalsIgnoreCase("q")) {
+                break;
+            }
+
+            State userState = State.findState(userLocationInput);
+            if (userState == null) {
+                System.out.println("Error: Current state '" + userLocationInput + "' not found!");
+                continue;
+            }
+
+            // Proceed to Location Route Processing
+            locationGetterUI(selectedAttraction, userState, graph);
+            break;
+        } while (true);
     }
 }
