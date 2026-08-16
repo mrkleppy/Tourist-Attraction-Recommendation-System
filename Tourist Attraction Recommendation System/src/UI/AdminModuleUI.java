@@ -60,7 +60,7 @@ public class AdminModuleUI extends UI {
             }
             
             City city = new City(cityInput, matchedState);
-            File.AppendCityFile(city);
+            File.appendCityFile(city);
             
             System.out.printf("%s is now in %s!\n", city.getName(), matchedState.toString());
             return;

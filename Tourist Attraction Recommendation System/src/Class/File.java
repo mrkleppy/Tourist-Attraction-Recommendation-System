@@ -17,7 +17,8 @@ public class File {
     private static final String CITY_FILE_PATH = "src/Data/City.csv";
     private static final String ATTRACTION_FILE_PATH = "src/Data/Attraction.csv";
     private static final String USER_FILE_PATH = "src/Data/Credential.csv";
-
+    private static final String SEARCHHISTORY_FILE_PATH = "src/Data/History.csv";    
+    
     public static List<City> readCityFile() {
         List<City> cities = new ArrayList<>();
         Path path = Paths.get(CITY_FILE_PATH);
@@ -162,8 +163,55 @@ public class File {
 
         return users;
     }
+    
+    public static List<SearchHistory> readSearchHistoryFile() {
+        List<SearchHistory> searchHistories = new ArrayList<>();
+        Path path = Paths.get(SEARCHHISTORY_FILE_PATH);
 
-    public static void AppendCityFile(City city) {
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) continue;               
+
+                String[] parts = line.split(",");
+
+                // Ensure row has at least username + at least 1 state
+                if (parts.length < 2) continue;
+
+                String username = parts[0].trim();
+                String firstState = parts[1].trim();
+
+                // Header check: Skip the header row ("username,states...")
+                if (username.equalsIgnoreCase("username") && firstState.equalsIgnoreCase("states")) {
+                    continue;
+                }
+
+                Member member = new Member();
+                member.setUsername(username);
+
+                // Fresh list for each row so states don't leak between users
+                List<State> states = new ArrayList<>();
+
+                // Loop from index 1 through the last element (parts.length)
+                for (int i = 1; i < parts.length; i++) {               
+                    State state = State.findState(parts[i].trim());
+                    if (state != null) {
+                        states.add(state);
+                    }
+                }
+
+                SearchHistory searchHistory = new SearchHistory(member, (ArrayList<State>)states);     
+                searchHistories.add(searchHistory);
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading search history file: " + e.getMessage());
+        }
+
+        return searchHistories;
+    }
+
+    public static void appendCityFile(City city) {
         Path path = Paths.get(CITY_FILE_PATH);
         // Formats city output explicitly as "CityName,StateName"
         String contentToAppend = city.getName() + "," + city.getState();
@@ -176,7 +224,7 @@ public class File {
         }
     }
 
-    public static void AppendAttractionFile(Attraction attraction) {
+    public static void appendAttractionFile(Attraction attraction) {
         Path path = Paths.get(ATTRACTION_FILE_PATH);
         String contentToAppend = attraction.getName() + "," + attraction.getCity().getName();
 
@@ -188,7 +236,7 @@ public class File {
         }
     }
 
-    public static void AppendCredentialFile(User user) {
+    public static void appendCredentialFile(User user) {
         Path path = Paths.get(USER_FILE_PATH);
         String contentToAppend = user.getUsername() + "," + user.getPassword() + "," + (user instanceof Admin ? "admin" : "member");
 
@@ -197,6 +245,50 @@ public class File {
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Error appending to credential file.");
+        }
+    }
+    
+    public static void appendSearchHistoryFile(SearchHistory searchHistory) {
+        Path path = Paths.get(SEARCHHISTORY_FILE_PATH);
+        
+        String contentToAppend = searchHistory.getMember().getUsername();
+        ArrayList<State> states = searchHistory.getStates();
+        
+        for (int i = 0; i < states.size(); i++) {
+            contentToAppend += ("," + states.get(i).name());
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile(), true))) {
+            writer.write(contentToAppend);
+            writer.newLine(); 
+        } catch (IOException e) {
+            System.out.println("Error appending to search history file.");
+        }
+    }
+    
+    public static void overwriteSearchHistoryFile(List<SearchHistory> searchHistories) {
+        Path path = Paths.get(SEARCHHISTORY_FILE_PATH);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
+            // Write header
+            writer.write("username,states");
+            writer.newLine();
+
+            // Write data rows
+            for (SearchHistory searchHistory : searchHistories) {
+                String username = searchHistory.getMember().getUsername();
+                List<State> states = searchHistory.getStates();
+
+                StringBuilder line = new StringBuilder(username);
+                for (int i = 0; i < states.size(); i++) {
+                    line.append(',').append(states.get(i).name());
+                }
+
+                writer.write(line.toString());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing to search history file: " + e.getMessage());
         }
     }
 }

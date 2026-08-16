@@ -19,15 +19,15 @@ public class Graph {
         adjList.putIfAbsent(key, new ArrayList<>());
     }
 
-    public void addEdge(String v1, String v1Type, String v2, String v2Type, int weight) {
+    public void addEdge(String v1, String v1Type, String v2, String v2Type) {
         addVertex(v1, v1Type);
         addVertex(v2, v2Type);
 
         String k1 = normalize(v1);
         String k2 = normalize(v2);
 
-        adjList.get(k1).add(new Edge(v1, v1Type, v2, v2Type, weight));
-        adjList.get(k2).add(new Edge(v2, v2Type, v1, v1Type, weight)); // Undirected
+        adjList.get(k1).add(new Edge(v1, v1Type, v2, v2Type));
+        adjList.get(k2).add(new Edge(v2, v2Type, v1, v1Type)); // Undirected
     }
 
     public void loadGraph() {
@@ -38,19 +38,40 @@ public class Graph {
         for (State state : State.values()) {
             addVertex(state.toString(), "STATE");
         }
-
+        
+        addEdge("PERLIS", "STATE", "KEDAH", "STATE");
+        addEdge("KEDAH", "STATE", "PENANG", "STATE");
+        addEdge("KEDAH", "STATE", "PERAK", "STATE");
+        addEdge("PENANG", "STATE", "PERAK", "STATE");
+        addEdge("PERAK", "STATE", "PAHANG", "STATE");
+        addEdge("PERAK", "STATE", "SELANGOR", "STATE");
+        addEdge("KELANTAN", "STATE", "TERENGGANU", "STATE");
+        addEdge("KELANTAN", "STATE", "PAHANG", "STATE");
+        addEdge("TERENGGANU", "STATE", "PAHANG", "STATE");
+        addEdge("PAHANG", "STATE", "SELANGOR", "STATE");
+        addEdge("PAHANG", "STATE", "NEGERISEMBILAN", "STATE");
+        addEdge("PAHANG", "STATE", "JOHOR", "STATE");
+        addEdge("SELANGOR", "STATE", "KUALALUMPUR", "STATE");
+        addEdge("SELANGOR", "STATE", "PUTRAJAYA", "STATE");
+        addEdge("SELANGOR", "STATE", "NEGERISEMBILAN", "STATE");
+        addEdge("SELANGOR", "STATE", "SABAH", "STATE");
+        addEdge("SELANGOR", "STATE", "SARAWAK", "STATE");
+        addEdge("NEGERISEMBILAN", "STATE", "MELAKA", "STATE");
+        addEdge("NEGERISEMBILAN", "STATE", "JOHOR", "STATE");
+        addEdge("MELAKA", "STATE", "JOHOR", "STATE");
+        
         // Add Cities and link City <-> State
         for (City city : cities) {
             addVertex(city.getName(), "CITY");
             // Edge between City name and State name
-            addEdge(city.getName(), "CITY", city.getState().toString(), "STATE", 0);
+            addEdge(city.getName(), "CITY", city.getState().toString(), "STATE");
         }
 
         // Add Attractions and link Attraction <-> City
         for (Attraction attraction : attractions) {
             addVertex(attraction.getName(), "ATTRACTION");                      
             String cityName = attraction.getCity().getName();             
-            addEdge(attraction.getName(), "ATTRACTION", cityName, "CITY", 0);
+            addEdge(attraction.getName(), "ATTRACTION", cityName, "CITY");
         }
     }
 
@@ -75,7 +96,7 @@ public class Graph {
             if (vertex != null && "ATTRACTION".equals(vertex.getType())) {
                 // Find attraction using stored original name
                 Attraction attraction = attractionByName.get(vertex.getName());
-                if (attraction != null) {
+                if (attraction != null && attraction.getCity().getState().name().equals(startKey)) {
                     attractions.add(attraction);
                 }
             }
@@ -94,18 +115,30 @@ public class Graph {
     
     public List<Attraction> getAttractionsByHistory(SearchHistory searchHistory) {
         List<Attraction> attractions = new ArrayList<>();
+        Set<Attraction> attractionSet = new LinkedHashSet<>();
         
-        // Need to do something to avoid redundant result in the list and dont break the sequence
         for (State state : searchHistory.getStates()) {
-            attractions.addAll(getAttractionsByState(state.name()));
+            attractionSet.addAll(getAttractionsByState(state.name()));
         }
+        
+        attractions.addAll(attractionSet);
         
         return attractions;
     }
 
-    public List<String> findRouteToAttraction(String startState, String targetAttraction) {
+    public List<String> findRouteToAttraction(String destination, String startState) {
         List<String> route = new ArrayList<>();
-        if (!vertices.containsKey(startState) || !vertices.containsKey(targetAttraction)) {
+        destination = normalize(destination);
+        startState = normalize(startState);
+        
+        if (!vertices.containsKey(startState) || !vertices.containsKey(destination)) {
+            System.out.println("Not found start or end"); //DEBUG
+            return route;
+        }
+
+        if (startState.equals(destination)) {
+            route.add(startState);
+            System.out.println("End is Start"); // DEBUG
             return route;
         }
 
@@ -120,17 +153,12 @@ public class Graph {
         while (!queue.isEmpty()) {
             String current = queue.poll();
 
-            if (current.equals(targetAttraction)) {
+            if (current.equals(destination)) {
                 break;
             }
 
             for (Edge edge : adjList.getOrDefault(current, Collections.emptyList())) {
-                String neighbor = edge.getTo();
-                
-                if (edge.getWeight()== 0) {
-                    continue;
-                }
-                
+                String neighbor = normalize(edge.getTo());
                 if (!visited.contains(neighbor)) {
                     visited.add(neighbor);
                     queue.add(neighbor);
@@ -139,16 +167,19 @@ public class Graph {
             }
         }
 
-        if (!previous.containsKey(targetAttraction)) {
-            return route;
+        if (!previous.containsKey(destination)) {
+            System.out.println("End no found"); // DEBUG
+            return route; // unreachable
         }
 
-        String step = targetAttraction;
+        // Reconstruct path
+        String step = destination;
         while (step != null) {
             route.add(0, step);
             step = previous.get(step);
         }
-
+        
+        System.out.println(route); //DEBUG
         return route;
     }
 }

@@ -1,15 +1,18 @@
 package Class;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class SearchHistory {
     private Member member; 
-    private State[] states;
+    private ArrayList<State> states;
 
     public SearchHistory() {
         this.member = null;
         this.states = null;
     }
 
-    public SearchHistory(Member member, State[] states) {
+    public SearchHistory(Member member, ArrayList<State> states) {
         this.member = member;
         this.states = states;
     }
@@ -22,12 +25,20 @@ public class SearchHistory {
         this.member = member;
     }
     
-    public State[] getStates() {
+    public ArrayList<State> getStates() {
         return states;
     }
     
-    public void setStates(State[] states) {
+    public void setStates(ArrayList<State> states) {
         this.states = states;
+    }
+    
+    public static ArrayList<State> defaultStates() {
+        ArrayList<State> defaultStates = new ArrayList<>();
+        
+        defaultStates.addAll(Arrays.asList(State.values()));
+        
+        return defaultStates;
     }
 }
 

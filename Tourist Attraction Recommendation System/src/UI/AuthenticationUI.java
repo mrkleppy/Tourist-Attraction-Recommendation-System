@@ -4,7 +4,7 @@ import Class.*;
 import java.util.List;
 
 public class AuthenticationUI extends UI{
-    public static void loginMenuUI(List<User> users) {
+    public static void loginMenuUI(List<User> users, List<SearchHistory> searchHistories) {
         do {
             System.out.println("\t1. Login as Member\n\t2. Login as Admin\n\t3. Register as Member\n\t0. Exit");
             System.out.print("\nSelection: ");
@@ -13,13 +13,13 @@ public class AuthenticationUI extends UI{
             System.out.println("\n\n");
             switch (choice) {
                 case "1":
-                    memberLoginUI(users);
+                    memberLoginUI(users, searchHistories);
                     break;
                 case "2":
                     adminLoginUI(users);
                     break;
                 case "3":
-                    registerMemberUI(users);
+                    registerMemberUI(users, searchHistories);
                     break;
                 case "0":
                     System.out.println("Bye, Have a nice trip!");
@@ -31,7 +31,7 @@ public class AuthenticationUI extends UI{
         } while(true);
     }
 
-    public static void memberLoginUI(List<User> users) {
+    public static void memberLoginUI(List<User> users, List<SearchHistory> searchHistories) {
         do {
             System.out.println("Member Login");
             System.out.print("Enter username: ");
@@ -46,7 +46,7 @@ public class AuthenticationUI extends UI{
 
             if (Authentication.validateLogin(users, username, password, "member")) {
                 System.out.println("Login successful!");
-                MemberModuleUI.memberMenuUI();
+                MemberModuleUI.memberMenuUI(searchHistories);
             } else {
                 System.out.println("Invalid credentials. Please try again.");
             }
@@ -75,7 +75,7 @@ public class AuthenticationUI extends UI{
         } while(true);
     }
 
-    public static void registerMemberUI(List<User> users) {
+    public static void registerMemberUI(List<User> users, List<SearchHistory> searchHistories) {
         do {
             System.out.println("\n\nRegister as Member");
             System.out.print("Enter username: ");
@@ -96,7 +96,7 @@ public class AuthenticationUI extends UI{
                 continue;
             }
 
-            if (Authentication.registerMember(users, username, password)) {
+            if (Authentication.registerMember(users, searchHistories, username, password)) {
                 System.out.println("Registration successful! You can now log in.");
                 break;
             } else {

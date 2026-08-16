@@ -5,14 +5,12 @@ public class Edge {
     private String fromType;
     private String to;
     private String toType;
-    private int weight;
 
-    public Edge(String from, String fromType, String to, String toType, int weight) {
+    public Edge(String from, String fromType, String to, String toType) {
         this.from = from;
         this.fromType = fromType;
         this.to = to;
         this.toType = toType;
-        this.weight = weight;
     }
 
     public String getFrom() {
@@ -31,10 +29,6 @@ public class Edge {
         return toType;
     }
 
-    public int getWeight() {
-        return weight;
-    }
-
     public void setFrom(String from) {
         this.from = from;
     }
@@ -49,9 +43,5 @@ public class Edge {
 
     public void setToType(String toType) {
         this.toType = toType;
-    }
-
-    public void setWeight(int weight) {
-        this.weight = weight;
     }
 }
