@@ -33,6 +33,9 @@ public class MemberModuleUI extends UI {
         graph.loadGraph();
             
         do {
+            Graph graph = new Graph();
+            graph.loadGraph();
+            
             System.out.println("Enter q to go back...");
             System.out.println(underline + "View Recommendations" + reset);
             System.out.print("Enter a state: ");
