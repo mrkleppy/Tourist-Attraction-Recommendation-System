@@ -1,6 +1,7 @@
 package Class;
 
 import java.util.Objects;
+import java.util.List;
 
 public class City {
     private String name;
@@ -46,6 +47,24 @@ public class City {
     
     public void setTotalAttraction(int totalAttraction) {
         this.totalAttraction = totalAttraction;
+    }
+
+    private static String normaliseCityInput(String input) {
+        return input == null ? "" : input.trim().replaceAll("\\s+","".toUpperCase());
+    }
+
+    public static City findCity(String input) {
+        String normalisedInput = normaliseCityInput(input);
+
+        List<City> cities = File.readCityFile();
+
+        for (City city : cities) {
+            String normalisedCityName = normaliseCityInput(city.getName());
+            if (normalisedCityName.equalsIgnoreCase(normalisedInput)) {
+                return city;
+            }
+        }
+        return null;
     }
 
     @Override
