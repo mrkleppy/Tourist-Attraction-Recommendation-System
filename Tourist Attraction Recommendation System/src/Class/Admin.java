@@ -1,6 +1,5 @@
 package Class;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Admin extends User {
