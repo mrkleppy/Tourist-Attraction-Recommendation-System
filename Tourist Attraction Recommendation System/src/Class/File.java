@@ -266,6 +266,29 @@ public class File {
         }
     }
     
+    public static void overwriteCityFile(List<City> cities) {
+        Path path = Paths.get(CITY_FILE_PATH);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
+            // Write header
+            writer.write("CityName, StateName");
+            writer.newLine();
+
+            // Write data rows
+            for (City city : cities) {
+                String cityName = city.getName();
+                String stateName = city.getState().name();
+
+                String line = cityName + ", " + stateName;
+
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing to city file: " + e.getMessage());
+        }
+    }
+    
     public static void overwriteAttractionFile(List<Attraction> attractions) {
         Path path = Paths.get(ATTRACTION_FILE_PATH);
 

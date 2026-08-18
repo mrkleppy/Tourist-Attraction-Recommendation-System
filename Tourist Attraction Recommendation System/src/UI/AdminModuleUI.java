@@ -55,34 +55,65 @@ public class AdminModuleUI extends UI {
                 return;
             }
             
+            boolean duplicate = false;
+            List <City> cities = File.readCityFile();
+            for (City city : cities) {
+                if (cityInput.equalsIgnoreCase(city.getName())) {
+                    System.out.println("Error: City is already added!");
+                    duplicate = true;
+                    break;
+                }
+            }
+            
+            if (duplicate) {
+                continue;
+            }
+            
             System.out.print("State name: ");
             String stateInput = sc.nextLine();
 
             State matchedState = State.findState(stateInput);
             if (matchedState == null) {
-                System.out.println("Error: Current state '" + stateInput + "' not found!");
-                continue;
+                System.out.println("Error: Current state '" + stateInput + "' not found!");               
+            } else {
+                City city = Admin.addCity(cityInput, matchedState);
+                System.out.printf("%s is now in %s!\n", city.getName(), matchedState.toString());
+                return;
             }
-            
-            City city = new City(cityInput, matchedState);
-            File.appendCityFile(city);
-            
-            System.out.printf("%s is now in %s!\n", city.getName(), matchedState.toString());
-            return;
         } while (true);
     }
 
     public static void removeCityUI() {
+        List<City> cities = File.readCityFile();
+        
         do {
-            System.out.println("Remove city");
+            System.out.print("Enter an city to remove: ");
+            String cityToRemove = sc.nextLine();
             
-            // TODO: UI and everything
+            if (cityToRemove.equalsIgnoreCase("q")) {
+                return;
+            } 
             
+            if (Admin.removeCity(cities, cityToRemove)) {
+                System.out.println("City " + cityToRemove + " is now removed!");
+                return;
+            } else {
+                System.out.println("City name not found!");
+            }
         } while (true);
     }
 
     public static void addAttractionUI() {
-         do {
+        Graph graph = new Graph();
+        graph.loadGraph();
+        
+        List<Attraction> attractions = new ArrayList<>();
+                
+        for (State state : State.values()) {
+            attractions.addAll(graph.getAttractionsByState(state.name()));
+        }
+        
+        do {
             System.out.println("Add attraction");
             System.out.print("Attraction name: ");
             String attractionInput = sc.nextLine();
@@ -91,22 +122,31 @@ public class AdminModuleUI extends UI {
                 return;
             }
             
+            boolean duplicate = false;
+            for (Attraction attraction : attractions) {
+                if (attractionInput.equalsIgnoreCase(attraction.getName())) {
+                    System.out.println("Error: Attraction is already added!");
+                    duplicate = true;
+                    break;
+                }
+            }
+            
+            if (duplicate) {
+                continue;
+            }
+            
             System.out.print("City name: ");
             String cityInput = sc.nextLine();
 
             City matchedCity = City.findCity(cityInput);
             if (matchedCity == null) {
                 System.out.println("Error: Current city " + cityInput + " not found!");
-                continue;
-            }
-            
-            // Redundancy check
+            } else {
+                Attraction attraction = Admin.addAttraction(attractionInput, matchedCity);
 
-            Attraction attraction = new Attraction(attractionInput, matchedCity);
-            File.appendAttractionFile(attraction);
-            
-            System.out.printf("%s is now in %s!\n", attractionInput, matchedCity.getName());
-            return;
+                System.out.printf("%s is now in %s!\n", attraction.getName(), matchedCity.getName());
+                return;   
+            }
         } while (true);
         
     }
@@ -127,21 +167,12 @@ public class AdminModuleUI extends UI {
             
             if (attractionToRemove.equalsIgnoreCase("q")) {
                 return;
-            }
+            } 
             
-            boolean found = false;
-            for (Attraction attraction : attractions) {
-                if (attraction.getName().equalsIgnoreCase(attractionToRemove)) {
-                    attractions.remove(attraction);
-                    File.overwriteAttractionFile(attractions);
-                    
-                    System.out.println("Attraction " + attractionToRemove + " is now removed!");
-                    found = true;
-                    break;
-                }
-            }
-            
-            if (!found) {
+            if (Admin.removeAttraction(attractions, attractionToRemove)) {
+                System.out.println("Attraction " + attractionToRemove + " is now removed!");
+                return;
+            } else {
                 System.out.println("Attraction name not found!");
             }
         } while (true);
