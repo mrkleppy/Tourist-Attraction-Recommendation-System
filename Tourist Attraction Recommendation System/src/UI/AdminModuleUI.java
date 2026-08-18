@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 public class AdminModuleUI extends UI {
 
@@ -48,13 +46,10 @@ public class AdminModuleUI extends UI {
     public static void addCityUI() {
         do {
             System.out.println("Add city");
+
+            // TODO: UI and everything
             System.out.print("City name: ");
             String cityInput = sc.nextLine();
-            
-            if (cityInput.equalsIgnoreCase("q")) {
-                return;
-            }
-            
             System.out.print("State name: ");
             String stateInput = sc.nextLine();
 
@@ -73,78 +68,42 @@ public class AdminModuleUI extends UI {
     }
 
     public static void removeCityUI() {
+        Map<String, Attraction> attractionByName = new LinkedHashMap<>();
+        List<City> cities = File.readCityFile();
+        List<Attraction> attractions = File.readAttractionFile(attractionByName);
+        Admin admin = new Admin();
+
         do {
             System.out.println("Remove city");
-            
-            // TODO: UI and everything
-            
+            System.out.print("City name to remove (or q to go back): ");
+            String cityInput = sc.nextLine().trim();
+
+            if (cityInput.equalsIgnoreCase("q")) {
+                return;
+            }
+
+            boolean removed = admin.removeCity(cityInput, cities, attractions);
+            if (removed) {
+                System.out.println(cityInput + " and its attractions have been removed.");
+                return;
+            } else {
+                System.out.println("Error: City '" + cityInput + "' not found! Please try again.");
+            }
         } while (true);
     }
 
     public static void addAttractionUI() {
-         do {
-            System.out.println("Add attraction");
-            System.out.print("Attraction name: ");
-            String attractionInput = sc.nextLine();
-            
-            if (attractionInput.equalsIgnoreCase("q")) {
-                return;
-            }
-            
-            System.out.print("City name: ");
-            String cityInput = sc.nextLine();
+        System.out.println("Add attraction");
 
-            City matchedCity = City.findCity(cityInput);
-            if (matchedCity == null) {
-                System.out.println("Error: Current city " + cityInput + " not found!");
-                continue;
-            }
-            
-            // Redundancy check
-
-            Attraction attraction = new Attraction(attractionInput, matchedCity);
-            File.appendAttractionFile(attraction);
-            
-            System.out.printf("%s is now in %s!\n", attractionInput, matchedCity.getName());
-            return;
-        } while (true);
+        // TODO: UI and everything
         
     }
 
     public static void removeAttractionUI() {
-        Graph graph = new Graph();
-        graph.loadGraph();
-        
-        List<Attraction> attractions = new ArrayList<>();
-                
-        for (State state : State.values()) {
-            attractions.addAll(graph.getAttractionsByState(state.name()));
-        }
-        
-        do {
-            System.out.print("Enter an attraction to remove: ");
-            String attractionToRemove = sc.nextLine();
-            
-            if (attractionToRemove.equalsIgnoreCase("q")) {
-                return;
-            }
-            
-            boolean found = false;
-            for (Attraction attraction : attractions) {
-                if (attraction.getName().equalsIgnoreCase(attractionToRemove)) {
-                    attractions.remove(attraction);
-                    File.overwriteAttractionFile(attractions);
-                    
-                    System.out.println("Attraction " + attractionToRemove + " is now removed!");
-                    found = true;
-                    break;
-                }
-            }
-            
-            if (!found) {
-                System.out.println("Attraction name not found!");
-            }
-        } while (true);
+        System.out.println("Remove attraction");
+
+        // TODO: UI and everything
+
     }
 
     public static void viewAttractionUI() {
