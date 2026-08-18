@@ -14,11 +14,17 @@ public class Admin extends User {
     }
 
     /**
-     * Removes a city (matched by name, case-insensitive) from the given list,
-     * along with any attractions that belong to it, then persists both
-     * City.csv and Attraction.csv. Returns true if the city was found and removed.
+     * Removes a city (matched by name, case-insensitive) from the given list.
+     * Before removing, checks whether any attractions are linked to that city;
+     * if so, those attractions are removed too. Persists both City.csv and
+     * Attraction.csv.
+     *
+     * @return the list of attractions that were removed along with the city,
+     *         or {@code null} if no city with that name was found (nothing removed).
+     *         An empty list means the city was found and removed, but had no
+     *         linked attractions.
      */
-    public boolean removeCity(String cityName, List<City> cities, List<Attraction> attractions) {
+    public List<Attraction> removeCity(String cityName, List<City> cities, List<Attraction> attractions) {
         City toRemove = null;
         for (City city : cities) {
             if (city.getName().equalsIgnoreCase(cityName)) {
@@ -28,24 +34,28 @@ public class Admin extends User {
         }
 
         if (toRemove == null) {
-            return false;
+            return null;
+        }
+
+        // Check whether any attractions are linked to this city
+        List<Attraction> linkedAttractions = new ArrayList<>();
+        for (Attraction attraction : attractions) {
+            if (attraction.getCity().equals(toRemove)) {
+                linkedAttractions.add(attraction);
+            }
+        }
+
+        // Remove the linked attractions, if any were found
+        if (!linkedAttractions.isEmpty()) {
+            attractions.removeAll(linkedAttractions);
         }
 
         cities.remove(toRemove);
 
-        List<Attraction> remaining = new ArrayList<>();
-        for (Attraction attraction : attractions) {
-            if (!attraction.getCity().equals(toRemove)) {
-                remaining.add(attraction);
-            }
-        }
-        attractions.clear();
-        attractions.addAll(remaining);
-
         File.overwriteCityFile(cities);
         File.overwriteAttractionFile(attractions);
 
-        return true;
+        return linkedAttractions;
     }
 
     @Override
