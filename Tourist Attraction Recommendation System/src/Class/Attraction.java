@@ -34,7 +34,7 @@ public class Attraction {
     
     @Override
     public String toString() {
-        return getName() + "," + getCity().getName() + "," + getCity().getState();
+        return getName() + ", " + getCity().getName() + ", " + getCity().getState();
     }
     
     @Override
