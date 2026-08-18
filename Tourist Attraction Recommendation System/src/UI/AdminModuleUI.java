@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class AdminModuleUI extends UI {
 
@@ -46,48 +48,134 @@ public class AdminModuleUI extends UI {
     public static void addCityUI() {
         do {
             System.out.println("Add city");
-
-            // TODO: UI and everything
             System.out.print("City name: ");
             String cityInput = sc.nextLine();
+            
+            if (cityInput.equalsIgnoreCase("q")) {
+                return;
+            }
+            
+            boolean duplicate = false;
+            List <City> cities = File.readCityFile();
+            for (City city : cities) {
+                if (cityInput.equalsIgnoreCase(city.getName())) {
+                    System.out.println("Error: City is already added!");
+                    duplicate = true;
+                    break;
+                }
+            }
+            
+            if (duplicate) {
+                continue;
+            }
+            
             System.out.print("State name: ");
             String stateInput = sc.nextLine();
 
             State matchedState = State.findState(stateInput);
             if (matchedState == null) {
-                System.out.println("Error: Current state '" + stateInput + "' not found!");
-                continue;
+                System.out.println("Error: Current state '" + stateInput + "' not found!");               
+            } else {
+                City city = Admin.addCity(cityInput, matchedState);
+                System.out.printf("%s is now in %s!\n", city.getName(), matchedState.toString());
+                return;
             }
-            
-            City city = new City(cityInput, matchedState);
-            File.appendCityFile(city);
-            
-            System.out.printf("%s is now in %s!\n", city.getName(), matchedState.toString());
-            return;
         } while (true);
     }
 
     public static void removeCityUI() {
+        List<City> cities = File.readCityFile();
+        
         do {
-            System.out.println("Remove city");
+            System.out.print("Enter an city to remove: ");
+            String cityToRemove = sc.nextLine();
             
-            // TODO: UI and everything
+            if (cityToRemove.equalsIgnoreCase("q")) {
+                return;
+            } 
             
+            if (Admin.removeCity(cities, cityToRemove)) {
+                System.out.println("City " + cityToRemove + " is now removed!");
+                return;
+            } else {
+                System.out.println("City name not found!");
+            }
         } while (true);
     }
 
     public static void addAttractionUI() {
-        System.out.println("Add attraction");
+        Graph graph = new Graph();
+        graph.loadGraph();
+        
+        List<Attraction> attractions = new ArrayList<>();
+                
+        for (State state : State.values()) {
+            attractions.addAll(graph.getAttractionsByState(state.name()));
+        }
+        
+        do {
+            System.out.println("Add attraction");
+            System.out.print("Attraction name: ");
+            String attractionInput = sc.nextLine();
+            
+            if (attractionInput.equalsIgnoreCase("q")) {
+                return;
+            }
+            
+            boolean duplicate = false;
+            for (Attraction attraction : attractions) {
+                if (attractionInput.equalsIgnoreCase(attraction.getName())) {
+                    System.out.println("Error: Attraction is already added!");
+                    duplicate = true;
+                    break;
+                }
+            }
+            
+            if (duplicate) {
+                continue;
+            }
+            
+            System.out.print("City name: ");
+            String cityInput = sc.nextLine();
 
-        // TODO: UI and everything
+            City matchedCity = City.findCity(cityInput);
+            if (matchedCity == null) {
+                System.out.println("Error: Current city " + cityInput + " not found!");
+            } else {
+                Attraction attraction = Admin.addAttraction(attractionInput, matchedCity);
+
+                System.out.printf("%s is now in %s!\n", attraction.getName(), matchedCity.getName());
+                return;   
+            }
+        } while (true);
         
     }
 
     public static void removeAttractionUI() {
-        System.out.println("Remove attraction");
-
-        // TODO: UI and everything
-
+        Graph graph = new Graph();
+        graph.loadGraph();
+        
+        List<Attraction> attractions = new ArrayList<>();
+                
+        for (State state : State.values()) {
+            attractions.addAll(graph.getAttractionsByState(state.name()));
+        }
+        
+        do {
+            System.out.print("Enter an attraction to remove: ");
+            String attractionToRemove = sc.nextLine();
+            
+            if (attractionToRemove.equalsIgnoreCase("q")) {
+                return;
+            } 
+            
+            if (Admin.removeAttraction(attractions, attractionToRemove)) {
+                System.out.println("Attraction " + attractionToRemove + " is now removed!");
+                return;
+            } else {
+                System.out.println("Attraction name not found!");
+            }
+        } while (true);
     }
 
     public static void viewAttractionUI() {

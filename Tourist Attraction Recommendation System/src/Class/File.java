@@ -226,7 +226,7 @@ public class File {
 
     public static void appendAttractionFile(Attraction attraction) {
         Path path = Paths.get(ATTRACTION_FILE_PATH);
-        String contentToAppend = attraction.getName() + "," + attraction.getCity().getName();
+        String contentToAppend = attraction.getName() + ", " + attraction.getCity().getName();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile(), true))) {
             writer.write(contentToAppend);
@@ -263,6 +263,52 @@ public class File {
             writer.newLine(); 
         } catch (IOException e) {
             System.out.println("Error appending to search history file.");
+        }
+    }
+    
+    public static void overwriteCityFile(List<City> cities) {
+        Path path = Paths.get(CITY_FILE_PATH);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
+            // Write header
+            writer.write("CityName, StateName");
+            writer.newLine();
+
+            // Write data rows
+            for (City city : cities) {
+                String cityName = city.getName();
+                String stateName = city.getState().name();
+
+                String line = cityName + ", " + stateName;
+
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing to city file: " + e.getMessage());
+        }
+    }
+    
+    public static void overwriteAttractionFile(List<Attraction> attractions) {
+        Path path = Paths.get(ATTRACTION_FILE_PATH);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
+            // Write header
+            writer.write("AttractionName, CityName");
+            writer.newLine();
+
+            // Write data rows
+            for (Attraction attraction : attractions) {
+                String attractionName = attraction.getName();
+                String cityName = attraction.getCity().getName();
+
+                String line = attractionName + ", " + cityName;
+
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing to attraction file: " + e.getMessage());
         }
     }
     
