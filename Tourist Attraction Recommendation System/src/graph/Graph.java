@@ -132,13 +132,11 @@ public class Graph {
         startState = normalize(startState);
         
         if (!vertices.containsKey(startState) || !vertices.containsKey(destination)) {
-            System.out.println("Not found start or end"); //DEBUG
             return route;
         }
 
         if (startState.equals(destination)) {
             route.add(startState);
-            System.out.println("End is Start"); // DEBUG
             return route;
         }
 
@@ -168,7 +166,6 @@ public class Graph {
         }
 
         if (!previous.containsKey(destination)) {
-            System.out.println("End no found"); // DEBUG
             return route; // unreachable
         }
 
@@ -179,7 +176,6 @@ public class Graph {
             step = previous.get(step);
         }
         
-        System.out.println(route); //DEBUG
         return route;
     }
 }

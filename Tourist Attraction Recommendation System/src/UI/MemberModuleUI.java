@@ -3,7 +3,6 @@ package UI;
 import Class.*;
 import graph.*;
 import java.util.List;
-import java.util.ArrayList;
 
 public class MemberModuleUI extends UI {
     public static void memberMenuUI(List<SearchHistory> searchHistories) {
@@ -110,18 +109,6 @@ public class MemberModuleUI extends UI {
         } while (true);
     } 
 
-    public static void locationGetterUI(Attraction destination, State start, Graph graph) {
-        System.out.println("In order to get to " + destination.toString() + " from " + start.name());
-        
-        List<String> route = graph.findRouteToAttraction(destination.getName(), start.name());
-        System.out.println(route);
-        Member.viewRoute(route);
-
-        System.out.println("\nPress any key to go back......");
-        sc.nextLine();
-        
-    }
-
     public static void viewHistoryUI(List<SearchHistory> searchHistories) {
         Graph graph = new Graph();
         graph.loadGraph();
@@ -180,5 +167,16 @@ public class MemberModuleUI extends UI {
             locationGetterUI(selectedAttraction, userState, graph);
             break;
         } while (true);
+    }
+    
+    public static void locationGetterUI(Attraction destination, State start, Graph graph) {
+        System.out.println("In order to get to " + destination.toString() + " from " + start.name());
+        
+        List<String> route = graph.findRouteToAttraction(destination.getName(), start.name());
+        Member.viewRoute(route);
+
+        System.out.println("\nPress any key to go back......");
+        sc.nextLine();
+        
     }
 }
