@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 public class AdminModuleUI extends UI {
 
@@ -86,6 +84,15 @@ public class AdminModuleUI extends UI {
     public static void removeCityUI() {
         List<City> cities = File.readCityFile();
         
+        Graph graph = new Graph();
+        graph.loadGraph();
+        
+        List<Attraction> attractions = new ArrayList<>();
+        
+        for (State state : State.values()) {
+            attractions.addAll(graph.getAttractionsByState(state.name()));
+        }
+        
         do {
             System.out.print("Enter an city to remove: ");
             String cityToRemove = sc.nextLine();
@@ -94,7 +101,12 @@ public class AdminModuleUI extends UI {
                 return;
             } 
             
+<<<<<<< Updated upstream
             if (Admin.removeCity(cities, cityToRemove)) {
+=======
+            clearScreen();
+            if (Admin.removeCity(cities, cityToRemove, attractions)) {
+>>>>>>> Stashed changes
                 System.out.println("City " + cityToRemove + " is now removed!");
                 return;
             } else {
