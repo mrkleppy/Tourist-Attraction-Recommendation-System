@@ -12,6 +12,7 @@ public class MemberModuleUI extends UI {
             System.out.print("Selection: ");
             String choice = sc.nextLine();
             
+            clearScreen();
             switch (choice) {
                 case "1":
                     stateRecommendationsUI(searchHistories);
@@ -37,7 +38,9 @@ public class MemberModuleUI extends UI {
             System.out.print("Enter a state: ");
             String stateInput = sc.nextLine();
 
+            clearScreen();
             if (stateInput.equalsIgnoreCase("q")) {
+                clearScreen();
                 return;
             }
 
@@ -63,15 +66,16 @@ public class MemberModuleUI extends UI {
                 continue;
             }
                        
-            System.out.println("\nIn " + stateName + ", you can visit:");
-            Member.viewRecommendation(attractions);
-            
             do {
+                System.out.println("\nIn " + stateName + ", you can visit:");
+                Member.viewRecommendation(attractions);
+                
                 // Prompt and Validate Selected Attraction
                 System.out.print("\nEnter the attraction name you want to visit (or 'q' to cancel): ");
                 String attractionInput = sc.nextLine().trim();
 
                 if (attractionInput.equalsIgnoreCase("q")) {
+                    clearScreen();
                     break;
                 }
 
@@ -83,6 +87,7 @@ public class MemberModuleUI extends UI {
                     }
                 }
 
+                clearScreen();
                 if (selectedAttraction == null) {
                     System.out.println("Error: Attraction '" + attractionInput + "' is not listed in " + stateName + "!");
                     continue;
@@ -92,6 +97,7 @@ public class MemberModuleUI extends UI {
                 System.out.print("What state are you currently in? ");
                 String userLocationInput = sc.nextLine().trim();
 
+                clearScreen();
                 if (userLocationInput.equalsIgnoreCase("q")) {
                     break;
                 }
@@ -114,7 +120,7 @@ public class MemberModuleUI extends UI {
         graph.loadGraph();
         SearchHistory searchHistory = new SearchHistory();
         
-        System.out.println(underline + "View History" + reset); // change this title, not that suitable
+        System.out.println(underline + "Search History" + reset);
 
         for (int i = 0; i < searchHistories.size(); i++) {
             if (searchHistories.get(i).getMember().getUsername().equals(Authentication.getCurrentUser())) {
@@ -124,15 +130,15 @@ public class MemberModuleUI extends UI {
 
         List<Attraction> attractions = graph.getAttractionsByHistory(searchHistory);
 
-        System.out.println("\nAccording to your history, you can visit:");
-        Member.viewRecommendation(attractions);
-
         do {
+            System.out.println("\nAccording to your history, you can visit:");
+            Member.viewRecommendation(attractions);
             // Prompt and Validate Selected Attraction
             System.out.print("\nEnter the attraction name you want to visit (or 'q' to cancel): ");
             String attractionInput = sc.nextLine().trim();
 
             if (attractionInput.equalsIgnoreCase("q")) {
+                clearScreen();
                 break;
             }
 
@@ -145,6 +151,7 @@ public class MemberModuleUI extends UI {
             }
 
             if (selectedAttraction == null) {
+                clearScreen();
                 System.out.println("Error: Attraction '" + attractionInput + "' is not listed!");
                 continue;
             }
@@ -153,6 +160,7 @@ public class MemberModuleUI extends UI {
             System.out.print("What state are you currently in? ");
             String userLocationInput = sc.nextLine().trim();
 
+            clearScreen();
             if (userLocationInput.equalsIgnoreCase("q")) {
                 break;
             }
@@ -178,5 +186,6 @@ public class MemberModuleUI extends UI {
         System.out.println("\nPress any key to go back......");
         sc.nextLine();
         
+        clearScreen();
     }
 }

@@ -17,6 +17,7 @@ public class AdminModuleUI extends UI {
             System.out.print("Selection: ");
             String choice = sc.nextLine();
 
+            clearScreen();
             switch (choice) {
                 case "1":
                     addCityUI();
@@ -50,13 +51,21 @@ public class AdminModuleUI extends UI {
             String cityInput = sc.nextLine();
             
             if (cityInput.equalsIgnoreCase("q")) {
+                clearScreen();
                 return;
+            }
+            
+            if (cityInput.isEmpty()) {
+                clearScreen();
+                System.out.println("City name cannot be empty!");
+                continue;
             }
             
             boolean duplicate = false;
             List <City> cities = File.readCityFile();
             for (City city : cities) {
                 if (cityInput.equalsIgnoreCase(city.getName())) {
+                    clearScreen();
                     System.out.println("Error: City is already added!");
                     duplicate = true;
                     break;
@@ -70,6 +79,7 @@ public class AdminModuleUI extends UI {
             System.out.print("State name: ");
             String stateInput = sc.nextLine();
 
+            clearScreen();
             State matchedState = State.findState(stateInput);
             if (matchedState == null) {
                 System.out.println("Error: Current state '" + stateInput + "' not found!");               
@@ -98,15 +108,12 @@ public class AdminModuleUI extends UI {
             String cityToRemove = sc.nextLine();
             
             if (cityToRemove.equalsIgnoreCase("q")) {
+                clearScreen();
                 return;
             } 
             
-<<<<<<< Updated upstream
-            if (Admin.removeCity(cities, cityToRemove)) {
-=======
-            clearScreen();
+          
             if (Admin.removeCity(cities, cityToRemove, attractions)) {
->>>>>>> Stashed changes
                 System.out.println("City " + cityToRemove + " is now removed!");
                 return;
             } else {
@@ -131,12 +138,20 @@ public class AdminModuleUI extends UI {
             String attractionInput = sc.nextLine();
             
             if (attractionInput.equalsIgnoreCase("q")) {
+                clearScreen();
                 return;
+            }
+            
+            if (attractionInput.isEmpty()) {
+                clearScreen();
+                System.out.println("Attraction name cannot be empty!");
+                continue;
             }
             
             boolean duplicate = false;
             for (Attraction attraction : attractions) {
                 if (attractionInput.equalsIgnoreCase(attraction.getName())) {
+                    clearScreen();
                     System.out.println("Error: Attraction is already added!");
                     duplicate = true;
                     break;
@@ -150,12 +165,12 @@ public class AdminModuleUI extends UI {
             System.out.print("City name: ");
             String cityInput = sc.nextLine();
 
+            clearScreen();
             City matchedCity = City.findCity(cityInput);
             if (matchedCity == null) {
                 System.out.println("Error: Current city " + cityInput + " not found!");
             } else {
                 Attraction attraction = Admin.addAttraction(attractionInput, matchedCity);
-
                 System.out.printf("%s is now in %s!\n", attraction.getName(), matchedCity.getName());
                 return;   
             }
@@ -178,9 +193,11 @@ public class AdminModuleUI extends UI {
             String attractionToRemove = sc.nextLine();
             
             if (attractionToRemove.equalsIgnoreCase("q")) {
+                clearScreen();
                 return;
             } 
             
+            clearScreen();
             if (Admin.removeAttraction(attractions, attractionToRemove)) {
                 System.out.println("Attraction " + attractionToRemove + " is now removed!");
                 return;
@@ -206,11 +223,13 @@ public class AdminModuleUI extends UI {
             String stateInput = sc.nextLine().trim();
 
             if (stateInput.equalsIgnoreCase("q")) {
+                clearScreen();
                 return;
             }
 
             State selectedState = State.findState(stateInput);
             if (selectedState == null) {
+                clearScreen();
                 System.out.println("Error: State '" + stateInput + "' not found! Please try again.");
                 continue;
             }
@@ -219,6 +238,7 @@ public class AdminModuleUI extends UI {
 
             String stateName = State.formatStateName(selectedState);
 
+            clearScreen();
             if (attractions.isEmpty()) {
                 System.out.println(underline + "Attractions in " + stateName + reset);
                 System.out.println("\nNo attractions available in " + stateName + ".");
@@ -250,6 +270,7 @@ public class AdminModuleUI extends UI {
             String choice = sc.nextLine().trim();
 
             if (choice.equalsIgnoreCase("q")) {
+                clearScreen();
                 return;
             }
 
