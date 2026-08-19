@@ -2,6 +2,7 @@ package Class;
 
 import java.util.Objects;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Admin extends User {
     public Admin() {
@@ -14,16 +15,25 @@ public class Admin extends User {
     
     public static City addCity(String cityInput, State matchedState) {
         City city = new City(cityInput, matchedState);
-        File.appendCityFile(city); 
+        File.appendCityFile(city);
         
         return city;
     }
     
-    public static boolean removeCity(List<City> cities, String cityToRemove) {
+    public static boolean removeCity(List<City> cities, String cityToRemove, List<Attraction> attractions) {
         for (City city : cities) {
             if (city.getName().equalsIgnoreCase(cityToRemove)) {
                 cities.remove(city);
                 File.overwriteCityFile(cities);
+                
+                List<Attraction> temp = new ArrayList<>(attractions);
+                
+                for (Attraction attraction : temp) {
+                    if (attraction.getCity().equals(city)) {
+                        removeAttraction(attractions, attraction.getName());
+                    }
+                }
+                
                 return true;
             }
         }
