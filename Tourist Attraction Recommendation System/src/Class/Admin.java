@@ -3,6 +3,7 @@ package Class;
 import java.util.Objects;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Admin extends User {
     public Admin() {
@@ -41,23 +42,38 @@ public class Admin extends User {
         return false;
     }
     
-    public static Attraction addAttraction(String attractionInput, City matchedCity) {
-        Attraction attraction = new Attraction(attractionInput, matchedCity);
+    public static Attraction addAttraction(String id, String attractionInput, City matchedCity) {
+        Attraction attraction = new Attraction(id, attractionInput, matchedCity);
         File.appendAttractionFile(attraction);
         
         return attraction;
     }
     
     public static boolean removeAttraction(List<Attraction> attractions, String attractionToRemove) {
-        for (Attraction attraction : attractions) {
-            if (attraction.getName().equalsIgnoreCase(attractionToRemove)) {
-                attractions.remove(attraction);
-                File.overwriteAttractionFile(attractions);
-                return true;
+        Iterator<Attraction> it = attractions.iterator();
+        boolean removed = false;
+        
+        while (it.hasNext()) {
+            Attraction attraction = it.next();
+
+            if (attraction.getName().equalsIgnoreCase(attractionToRemove) ||
+                attraction.getId().equalsIgnoreCase(attractionToRemove)) {
+                it.remove();
+                removed = true;
+                break;
             }
         }
+
+        if (!removed) {
+            return false;
+        }
+
+        for (int i = 0; i < attractions.size(); i++) {
+            attractions.get(i).setId(String.format("A%04d", i+1));
+        }
         
-        return false;
+        File.overwriteAttractionFile(attractions);
+        return true;
     }
     
     @Override

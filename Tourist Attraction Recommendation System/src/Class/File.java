@@ -79,10 +79,11 @@ public class File {
                 }
 
                 String[] parts = line.split(",");
-                if (parts.length < 2) continue;
+                if (parts.length < 3) continue;
 
-                String attractionName = parts[0].trim();
-                String cityName = parts[1].trim();
+                String id = parts[0].trim();
+                String attractionName = parts[1].trim();
+                String cityName = parts[2].trim();
                 
                 if (
                     attractionName.equalsIgnoreCase("attractionName") || 
@@ -101,7 +102,7 @@ public class File {
                 }
 
                 if (matchedCity != null) {
-                    Attraction attraction = new Attraction(attractionName, matchedCity);
+                    Attraction attraction = new Attraction(id, attractionName, matchedCity);
                     attractions.add(attraction);
 
                     if (attractionByName != null) {
@@ -213,8 +214,8 @@ public class File {
 
     public static void appendCityFile(City city) {
         Path path = Paths.get(CITY_FILE_PATH);
-        // Formats city output explicitly as "CityName,StateName"
-        String contentToAppend = city.getName() + "," + city.getState();
+        // Formats city output explicitly as "CityName, StateName"
+        String contentToAppend = city.getName() + ", " + city.getState();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile(), true))) {
             writer.write(contentToAppend);
@@ -226,7 +227,7 @@ public class File {
 
     public static void appendAttractionFile(Attraction attraction) {
         Path path = Paths.get(ATTRACTION_FILE_PATH);
-        String contentToAppend = attraction.getName() + ", " + attraction.getCity().getName();
+        String contentToAppend = attraction.getId() + ", " +attraction.getName() + ", " + attraction.getCity().getName();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile(), true))) {
             writer.write(contentToAppend);
@@ -294,15 +295,16 @@ public class File {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
             // Write header
-            writer.write("AttractionName, CityName");
+            writer.write("ID, AttractionName, CityName");
             writer.newLine();
 
             // Write data rows
             for (Attraction attraction : attractions) {
+                String id = attraction.getId();
                 String attractionName = attraction.getName();
                 String cityName = attraction.getCity().getName();
 
-                String line = attractionName + ", " + cityName;
+                String line = id + ", " + attractionName + ", " + cityName;
 
                 writer.write(line);
                 writer.newLine();
@@ -317,7 +319,7 @@ public class File {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
             // Write header
-            writer.write("username,states");
+            writer.write("Username, States");
             writer.newLine();
 
             // Write data rows
