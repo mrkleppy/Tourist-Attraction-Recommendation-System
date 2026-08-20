@@ -20,18 +20,23 @@ public class AdminModuleUI extends UI {
             clearScreen();
             switch (choice) {
                 case "1":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     addCityUI();
                     break;
                 case "2":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     removeCityUI();
                     break;
                 case "3":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     addAttractionUI();
                     break;
                 case "4":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     removeAttractionUI();
                     break;
                 case "5":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     viewAttractionUI();
                     break;
                 case "0":
@@ -107,8 +112,8 @@ public class AdminModuleUI extends UI {
             System.out.print("Enter an city to remove: ");
             String cityToRemove = sc.nextLine();
             
+            clearScreen();
             if (cityToRemove.equalsIgnoreCase("q")) {
-                clearScreen();
                 return;
             } 
             
@@ -170,7 +175,9 @@ public class AdminModuleUI extends UI {
             if (matchedCity == null) {
                 System.out.println("Error: Current city " + cityInput + " not found!");
             } else {
-                Attraction attraction = Admin.addAttraction(attractionInput, matchedCity);
+                String id = Attraction.generateNextAttractionId();
+                
+                Attraction attraction = Admin.addAttraction(id, attractionInput, matchedCity);
                 System.out.printf("%s is now in %s!\n", attraction.getName(), matchedCity.getName());
                 return;   
             }
@@ -192,8 +199,8 @@ public class AdminModuleUI extends UI {
             System.out.print("Enter an attraction to remove: ");
             String attractionToRemove = sc.nextLine();
             
+            clearScreen();
             if (attractionToRemove.equalsIgnoreCase("q")) {
-                clearScreen();
                 return;
             } 
             
@@ -212,7 +219,6 @@ public class AdminModuleUI extends UI {
         graph.loadGraph();
 
         do {
-            System.out.println("Enter q to go back");
             System.out.println(underline + "View attractions" + reset);
 
             for (State state : State.values()) {
