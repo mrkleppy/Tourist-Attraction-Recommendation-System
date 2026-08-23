@@ -13,12 +13,15 @@ public class AuthenticationUI extends UI{
             clearScreen();
             switch (choice) {
                 case "1":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     memberLoginUI(users, searchHistories);
                     break;
                 case "2":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     adminLoginUI(users);
                     break;
                 case "3":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     registerMemberUI(users, searchHistories);
                     break;
                 case "0":

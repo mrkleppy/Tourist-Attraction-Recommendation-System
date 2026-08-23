@@ -67,11 +67,11 @@ public class MemberModuleUI extends UI {
             }
                        
             do {
-                System.out.println("\nIn " + stateName + ", you can visit:");
+                System.out.println("\nIn " + State.formatStateName(matchedState) + ", you can visit:");
                 Member.viewRecommendation(attractions);
                 
                 // Prompt and Validate Selected Attraction
-                System.out.print("\nEnter the attraction name you want to visit (or 'q' to cancel): ");
+                System.out.print("\nEnter the attraction ID you want to visit (or 'q' to cancel): ");
                 String attractionInput = sc.nextLine().trim();
 
                 if (attractionInput.equalsIgnoreCase("q")) {
@@ -81,14 +81,14 @@ public class MemberModuleUI extends UI {
 
                 Attraction selectedAttraction = null;
                 for (Attraction a : attractions) {
-                    if (a.getName().equalsIgnoreCase(attractionInput)) {
+                    if (attractionInput.equalsIgnoreCase(a.getId())) {
                         selectedAttraction = a;
                         break;
                     }
                 }
-
-                clearScreen();
+                
                 if (selectedAttraction == null) {
+                    clearScreen();
                     System.out.println("Error: Attraction '" + attractionInput + "' is not listed in " + stateName + "!");
                     continue;
                 }
@@ -178,7 +178,7 @@ public class MemberModuleUI extends UI {
     }
     
     public static void locationGetterUI(Attraction destination, State start, Graph graph) {
-        System.out.println("In order to get to " + destination.toString() + " from " + start.name());
+        System.out.println("In order to get to " + destination.toString() + " from " + State.formatStateName(start));
         
         List<String> route = graph.findRouteToAttraction(destination.getName(), start.name());
         Member.viewRoute(route);

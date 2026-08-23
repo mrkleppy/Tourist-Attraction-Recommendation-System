@@ -18,7 +18,8 @@ public class Member extends User {
         Iterator<Attraction> it = attractions.iterator();
 
         while (it.hasNext()) {
-            System.out.printf(" - %s\n", it.next().getName());
+            Attraction attraction = it.next();
+            System.out.printf("  - %s  %s\n", attraction.getId(), attraction.getName());
         }     
     }
     
