@@ -5,6 +5,8 @@ import graph.*;
 import java.util.List;
 
 public class MemberModuleUI extends UI {
+
+    // Member Menu UI
     public static void memberMenuUI(List<SearchHistory> searchHistories) {
         do {
             System.out.println(underline + "Welcome to Malaysia Tourist Attraction Recommendations!" + reset);
@@ -28,7 +30,10 @@ public class MemberModuleUI extends UI {
         } while(true);
     }
 
+    // State Recommendations UI
     public static void stateRecommendationsUI(List<SearchHistory> searchHistories) {
+
+        // Load the graph data for attractions and states
         Graph graph = new Graph();
         graph.loadGraph();
             
@@ -38,7 +43,6 @@ public class MemberModuleUI extends UI {
             System.out.print("Enter a state: ");
             String stateInput = sc.nextLine();
 
-            clearScreen();
             if (stateInput.equalsIgnoreCase("q")) {
                 clearScreen();
                 return;
@@ -47,6 +51,7 @@ public class MemberModuleUI extends UI {
             // Validate State Input
             State matchedState = State.findState(stateInput);
             if (matchedState == null) {
+                clearScreen();
                 System.out.println("Error: State '" + stateInput + "' not found! Please try again.");
                 continue;
             } else {
@@ -67,11 +72,11 @@ public class MemberModuleUI extends UI {
             }
                        
             do {
-                System.out.println("\nIn " + stateName + ", you can visit:");
+                System.out.println("\nIn " + State.formatStateName(matchedState) + ", you can visit:");
                 Member.viewRecommendation(attractions);
                 
                 // Prompt and Validate Selected Attraction
-                System.out.print("\nEnter the attraction name you want to visit (or 'q' to cancel): ");
+                System.out.print("\nEnter the attraction ID you want to visit (or 'q' to cancel): ");
                 String attractionInput = sc.nextLine().trim();
 
                 if (attractionInput.equalsIgnoreCase("q")) {
@@ -81,14 +86,14 @@ public class MemberModuleUI extends UI {
 
                 Attraction selectedAttraction = null;
                 for (Attraction a : attractions) {
-                    if (a.getName().equalsIgnoreCase(attractionInput)) {
+                    if (attractionInput.equalsIgnoreCase(a.getId())) {
                         selectedAttraction = a;
                         break;
                     }
                 }
-
-                clearScreen();
+                
                 if (selectedAttraction == null) {
+                    clearScreen();
                     System.out.println("Error: Attraction '" + attractionInput + "' is not listed in " + stateName + "!");
                     continue;
                 }
@@ -97,13 +102,14 @@ public class MemberModuleUI extends UI {
                 System.out.print("What state are you currently in? ");
                 String userLocationInput = sc.nextLine().trim();
 
-                clearScreen();
                 if (userLocationInput.equalsIgnoreCase("q")) {
+                    clearScreen();
                     break;
                 }
 
                 State userState = State.findState(userLocationInput);
                 if (userState == null) {
+                    clearScreen();
                     System.out.println("Error: Current state '" + userLocationInput + "' not found!");
                     continue;
                 }
@@ -115,19 +121,25 @@ public class MemberModuleUI extends UI {
         } while (true);
     } 
 
+    // View History UI
     public static void viewHistoryUI(List<SearchHistory> searchHistories) {
+
+        // Load the graph data for attractions and states
         Graph graph = new Graph();
         graph.loadGraph();
+
         SearchHistory searchHistory = new SearchHistory();
         
         System.out.println(underline + "Search History" + reset);
 
+        // Find the search history for the currently logged-in member
         for (int i = 0; i < searchHistories.size(); i++) {
             if (searchHistories.get(i).getMember().getUsername().equals(Authentication.getCurrentUser())) {
                 searchHistory = searchHistories.get(i);
             }
         }
 
+        // Get attractions based on the member's search history (With the most recent searches at the top)
         List<Attraction> attractions = graph.getAttractionsByHistory(searchHistory);
 
         do {
@@ -144,7 +156,7 @@ public class MemberModuleUI extends UI {
 
             Attraction selectedAttraction = null;
             for (Attraction a : attractions) {
-                if (a.getName().equalsIgnoreCase(attractionInput)) {
+                if (a.getId().equalsIgnoreCase(attractionInput)) {
                     selectedAttraction = a;
                     break;
                 }
@@ -160,13 +172,14 @@ public class MemberModuleUI extends UI {
             System.out.print("What state are you currently in? ");
             String userLocationInput = sc.nextLine().trim();
 
-            clearScreen();
             if (userLocationInput.equalsIgnoreCase("q")) {
+                clearScreen();
                 break;
             }
 
             State userState = State.findState(userLocationInput);
             if (userState == null) {
+                clearScreen();
                 System.out.println("Error: Current state '" + userLocationInput + "' not found!");
                 continue;
             }
@@ -178,8 +191,11 @@ public class MemberModuleUI extends UI {
     }
     
     public static void locationGetterUI(Attraction destination, State start, Graph graph) {
-        System.out.println("In order to get to " + destination.toString() + " from " + start.name());
+
+        // Display the route from the user's current state to the selected attraction
+        System.out.println("\nIn order to get to " + destination.toString() + " from " + State.formatStateName(start));
         
+        // Find the route using the graph's findRouteToAttraction method and display it
         List<String> route = graph.findRouteToAttraction(destination.getName(), start.name());
         Member.viewRoute(route);
 

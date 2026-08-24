@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class File {
 
+    // Constants for file paths
     private static final String CITY_FILE_PATH = "src/Data/City.csv";
     private static final String ATTRACTION_FILE_PATH = "src/Data/Attraction.csv";
     private static final String USER_FILE_PATH = "src/Data/Credential.csv";
@@ -62,7 +63,6 @@ public class File {
     public static List<Attraction> readAttractionFile(Map<String, Attraction> attractionByName) {
         List<City> cities = readCityFile();
         List<Attraction> attractions = new ArrayList<>();
-        // Fixed: pointed to Attraction.csv instead of City.csv
         Path path = Paths.get(ATTRACTION_FILE_PATH);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
@@ -79,10 +79,11 @@ public class File {
                 }
 
                 String[] parts = line.split(",");
-                if (parts.length < 2) continue;
+                if (parts.length < 3) continue;
 
-                String attractionName = parts[0].trim();
-                String cityName = parts[1].trim();
+                String id = parts[0].trim();
+                String attractionName = parts[1].trim();
+                String cityName = parts[2].trim();
                 
                 if (
                     attractionName.equalsIgnoreCase("attractionName") || 
@@ -101,7 +102,7 @@ public class File {
                 }
 
                 if (matchedCity != null) {
-                    Attraction attraction = new Attraction(attractionName, matchedCity);
+                    Attraction attraction = new Attraction(id, attractionName, matchedCity);
                     attractions.add(attraction);
 
                     if (attractionByName != null) {
@@ -213,8 +214,8 @@ public class File {
 
     public static void appendCityFile(City city) {
         Path path = Paths.get(CITY_FILE_PATH);
-        // Formats city output explicitly as "CityName,StateName"
-        String contentToAppend = city.getName() + "," + city.getState();
+        // Formats city output explicitly as "CityName, StateName"
+        String contentToAppend = city.getName() + ", " + city.getState();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile(), true))) {
             writer.write(contentToAppend);
@@ -226,7 +227,8 @@ public class File {
 
     public static void appendAttractionFile(Attraction attraction) {
         Path path = Paths.get(ATTRACTION_FILE_PATH);
-        String contentToAppend = attraction.getName() + ", " + attraction.getCity().getName();
+        // Formats attraction output explicitly as "ID, AttractionName, CityName"
+        String contentToAppend = attraction.getId() + ", " +attraction.getName() + ", " + attraction.getCity().getName();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile(), true))) {
             writer.write(contentToAppend);
@@ -238,6 +240,7 @@ public class File {
 
     public static void appendCredentialFile(User user) {
         Path path = Paths.get(USER_FILE_PATH);
+        // Formats user output explicitly as "Username, Password, Role"
         String contentToAppend = user.getUsername() + "," + user.getPassword() + "," + (user instanceof Admin ? "admin" : "member");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile(), true))) {
@@ -250,7 +253,7 @@ public class File {
     
     public static void appendSearchHistoryFile(SearchHistory searchHistory) {
         Path path = Paths.get(SEARCHHISTORY_FILE_PATH);
-        
+        // Formats search history output explicitly as "Username, State1, State2, ..."
         String contentToAppend = searchHistory.getMember().getUsername();
         ArrayList<State> states = searchHistory.getStates();
         
@@ -294,15 +297,16 @@ public class File {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
             // Write header
-            writer.write("AttractionName, CityName");
+            writer.write("ID, AttractionName, CityName");
             writer.newLine();
 
             // Write data rows
             for (Attraction attraction : attractions) {
+                String id = attraction.getId();
                 String attractionName = attraction.getName();
                 String cityName = attraction.getCity().getName();
 
-                String line = attractionName + ", " + cityName;
+                String line = id + ", " + attractionName + ", " + cityName;
 
                 writer.write(line);
                 writer.newLine();
@@ -317,7 +321,7 @@ public class File {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
             // Write header
-            writer.write("username,states");
+            writer.write("Username, States");
             writer.newLine();
 
             // Write data rows
