@@ -6,15 +6,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Member extends User {    
+
+    // Default constructor
     public Member() {
         super("", "", "member");
     }
 
+    // Parameterised constructor
     public Member(String username, String password) {
         super(username, password, "member");
     }
 
+    // View recommendation function
     public static void viewRecommendation(List<Attraction> attractions) {    
+
+        // Iterate through the list of attractions and print their details
         Iterator<Attraction> it = attractions.iterator();
 
         while (it.hasNext()) {
@@ -23,7 +29,10 @@ public class Member extends User {
         }     
     }
     
+    // Update search history function
     public static void updateHistory(List<SearchHistory> searchHistories, int indexFound, State searchState) {
+
+        // Get the list of states for the member at the found index
         List<State> states = searchHistories.get(indexFound).getStates();
 
         // Find the index of the existing state with the same name
@@ -49,9 +58,14 @@ public class Member extends User {
         File.overwriteSearchHistoryFile(searchHistories);
     }
     
+    // View route function
     public static void viewRoute(List<String> route) {
+
+        // Iterate through the list of route strings and print them in order with arrows
         Iterator<String> it = route.iterator();
         
+        // Print the route in the format "State1 -> State2 -> State3 ..."
+        // Checks if the iterator has a next element, if yes, print it and check if there is another next element to print the arrow
         while (it.hasNext()) {
             System.out.print(it.next());
             if (it.hasNext()) {

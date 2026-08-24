@@ -1,22 +1,27 @@
 package Class;
 
 public abstract class User {
+    
+    // Attributes
     private String username;
     private String password;
     private String role;
 
+    // Constructors
     public User() {
         this.username = "";
         this.password = "";
         this.role = "";
     }
 
+    // Parameterised constructor
     public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
     }
 
+    // Accessor and Mutator methods
     public String getUsername() {
         return username;
     }

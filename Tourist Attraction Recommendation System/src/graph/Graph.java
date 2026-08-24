@@ -18,39 +18,6 @@ public class Graph {
     private Map<String, List<Edge>> adjList = new HashMap<>();
     private Map<String, Attraction> attractionByName = new HashMap<>();
     
-    // Constructor (default)
-    public Graph() {
-        vertices = null;
-        adjList = null;
-        attractionByName = null;
-    }
-    
-    // Accessors
-    public Map<String, Vertex> getVertices() {
-        return vertices;
-    }
-
-    public Map<String, List<Edge>> getAdjList() {
-        return adjList;
-    }
-
-    public Map<String, Attraction> getAttractionByName() {
-        return attractionByName;
-    }
-    
-    // Mutators
-    public void setVertices(Map<String, Vertex> vertices) {
-        this.vertices = vertices;
-    }
-
-    public void setAdjList(Map<String, List<Edge>> adjList) {
-        this.adjList = adjList;
-    }
-
-    public void setAttractionByName(Map<String, Attraction> attractionByName) {
-        this.attractionByName = attractionByName;
-    }
-    
     // Normalize keys to uppercase so searches are case-insensitive
     private String normalize(String input) {
         return input == null ? "" : input.trim().toUpperCase();
