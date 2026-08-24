@@ -21,18 +21,23 @@ public class AdminModuleUI extends UI {
             clearScreen();
             switch (choice) {
                 case "1":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     addCityUI();
                     break;
                 case "2":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     removeCityUI();
                     break;
                 case "3":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     addAttractionUI();
                     break;
                 case "4":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     removeAttractionUI();
                     break;
                 case "5":
+                    System.out.println("Enter 'q' to go back to the previous menu.");
                     viewAttractionUI();
                     break;
                 case "0":

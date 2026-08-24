@@ -1,38 +1,38 @@
-AttractionName, CityName
-Gua Kelam, Kangar
-Alor Setar Tower, Alor Setar
-Kedah Royal Meseum, Alor Setar
-Paddy Meseum, Alor Setar
-Kilim Geoforest Park, Langkawi
-Eagle Square, Langkawi
-Sky Bridge, Langkawi
-Penang Hill, Georgetown
-Kek Lok Si Temple, Georgetown
-Cheong Fatt Tze, Georgetown
-War Meseum, Bayan Lepas
-Queensbay Mall, Bayan Lepas
-Snake Temple, Bayan Lepas
-Lost World of Tambun, Ipoh
-Sunway Lagoon, Shah Alam
-Sky Mirror, Shah Alam
-Port Dickson Beach, Port Dickson
-A'Famosa, Melaka City
-Jonker Street, Melaka City
-Pantai Cahaya Bulan, Kota Bharu
-Pulau Redang, Kuala Terengganu
-Taman Gelora, Kuantan
-Sungai Pandan Waterfall, Kuantan
-Teluk Cempedak Beach, Kuantan
-Chin Swee Caves Temple, Bentong
-Genting Skyworlds Theme Park, Bentong
-Bentong Walk, Bentong
-Legoland, Johor Bahru
-Sipadan Island, Kota Kinabalu
-Mount Kinabalu, Kota Kinabalu
-Sarawak Cultural Village, Kuching
-Mulu Caves, Kuching
-Zoo Negara, Wangsa Maju
-Royal Selangor Pewter Visitor Centre, Wangsa Maju
-KLCC, Kuala Lumpur
-Bukit Bintang, Kuala Lumpur
-Pink Mosque, Putrajaya
+ID, AttractionName, CityName
+A0001, Gua Kelam, Kangar
+A0002, Alor Setar Tower, Alor Setar
+A0003, Kedah Royal Meseum, Alor Setar
+A0004, Paddy Meseum, Alor Setar
+A0005, Kilim Geoforest Park, Langkawi
+A0006, Eagle Square, Langkawi
+A0007, Sky Bridge, Langkawi
+A0008, Penang Hill, Georgetown
+A0009, Kek Lok Si Temple, Georgetown
+A0010, Cheong Fatt Tze, Georgetown
+A0011, War Meseum, Bayan Lepas
+A0012, Queensbay Mall, Bayan Lepas
+A0013, Snake Temple, Bayan Lepas
+A0014, Lost World of Tambun, Ipoh
+A0015, Sunway Lagoon, Shah Alam
+A0016, Sky Mirror, Shah Alam
+A0017, Port Dickson Beach, Port Dickson
+A0018, A'Famosa, Melaka City
+A0019, Jonker Street, Melaka City
+A0020, Pantai Cahaya Bulan, Kota Bharu
+A0021, Pulau Redang, Kuala Terengganu
+A0022, Taman Gelora, Kuantan
+A0023, Sungai Pandan Waterfall, Kuantan
+A0024, Teluk Cempedak Beach, Kuantan
+A0025, Chin Swee Caves Temple, Bentong
+A0026, Genting Skyworlds Theme Park, Bentong
+A0027, Bentong Walk, Bentong
+A0028, Legoland, Johor Bahru
+A0029, Sipadan Island, Kota Kinabalu
+A0030, Mount Kinabalu, Kota Kinabalu
+A0031, Sarawak Cultural Village, Kuching
+A0032, Mulu Caves, Kuching
+A0033, Zoo Negara, Wangsa Maju
+A0034, Royal Selangor Pewter Visitor Centre, Wangsa Maju
+A0035, KLCC, Kuala Lumpur
+A0036, Bukit Bintang, Kuala Lumpur
+A0037, Pink Mosque, Putrajaya
