@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import graph.*;
 
 public class Admin extends User {
     
@@ -18,19 +19,25 @@ public class Admin extends User {
     }
     
     // Add City function
-    public static City addCity(String cityInput, State matchedState) {
+    public static City addCity(String cityInput, State matchedState, Graph graph) {
         // Construct an object for the new city
         City newCity = new City(cityInput, matchedState);
         
         // Once constructed, append it to the City File
         File.appendCityFile(newCity);
         
+        // Update the graph
+        if (graph != null) {
+            graph.addVertex(newCity.getName(), "CITY");
+            graph.addEdge(newCity.getName(), "CITY", matchedState.name(), "STATE");
+        }
+        
         // Return the new city object
         return newCity;
     }
     
     // Remove City function
-    public static boolean removeCity(List<City> cities, String cityToRemove, List<Attraction> attractions) {
+    public static boolean removeCity(List<City> cities, String cityToRemove, List<Attraction> attractions, Graph graph) {
         // For-each loop to identify the matching city with the city name input
         for (City city : cities) {
             if (city.getName().equalsIgnoreCase(cityToRemove)) {
@@ -39,6 +46,11 @@ public class Admin extends User {
                 
                 // Updates the file with the removed city
                 File.overwriteCityFile(cities);
+                
+                // Update in the graph
+                if (graph != null) {
+                    graph.removeVertex(city.getName());
+                }
                 
                 // Create a temporary arraylist of every attractions
                 // To remove all of the attractions that is in the removed city
@@ -49,7 +61,7 @@ public class Admin extends User {
                 for (Attraction attraction : temp) {
                     if (attraction.getCity().equals(city)) {
                         // Calls the remove attraction function to remove the attraction
-                        removeAttraction(attractions, attraction.getName());
+                        removeAttraction(attractions, attraction.getName(), graph);
                     }
                 }
                 
@@ -62,23 +74,31 @@ public class Admin extends User {
         return false;
     }
     
-    public static Attraction addAttraction(String id, String attractionInput, City matchedCity) {
+    public static Attraction addAttraction(String id, String attractionInput, City matchedCity, Graph graph) {
         // Builds the object for the newAttraction
         Attraction newAttraction = new Attraction(id, attractionInput, matchedCity);
         
         // Adds the new attraction to the file.
         File.appendAttractionFile(newAttraction);
         
+        // update in graph
+        if (graph != null) {
+            graph.addVertex(newAttraction.getName(), "ATTRACTION");
+            graph.addEdge(newAttraction.getName(), "ATTRACTION", matchedCity.getName(), "CITY");
+        }
+        
         // Returns the new attraction object
         return newAttraction;
     }
     
-    public static boolean removeAttraction(List<Attraction> attractions, String attractionToRemove) {
+    public static boolean removeAttraction(List<Attraction> attractions, String attractionToRemove, Graph graph) {
         // Use an iterator to iterate through the attractions
         Iterator<Attraction> it = attractions.iterator();
         
         // A flag to check whether an attraction has been successfully removed
         boolean removed = false;
+        
+        String removedAttractionName = null;
         
         // When the iterator still has a next element, we keep executing the function.
         while (it.hasNext()) {
@@ -89,6 +109,7 @@ public class Admin extends User {
             if (temporaryAttraction.getName().equalsIgnoreCase(attractionToRemove) ||
                 temporaryAttraction.getId().equalsIgnoreCase(attractionToRemove)) {
                 // If yes, we remove it from the iterator and set the removed flag to true, to indicate success removal
+                removedAttractionName = temporaryAttraction.getName();
                 it.remove();
                 removed = true;
                 
@@ -101,7 +122,12 @@ public class Admin extends User {
         if (!removed) {
             return false;
         }
-
+        
+        // Update in graph
+        if (graph != null && removedAttractionName != null) {
+            graph.removeVertex(removedAttractionName);
+        }
+        
         // Reassign every attractions with a new ID according to the iterator (follows sequence in STATE.java)
         for (int i = 0; i < attractions.size(); i++) {
             // Get the attraction then set the id and increment it everytime

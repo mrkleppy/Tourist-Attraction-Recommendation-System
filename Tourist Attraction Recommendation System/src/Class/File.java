@@ -60,7 +60,7 @@ public class File {
         return cities;
     }
 
-    public static List<Attraction> readAttractionFile(Map<String, Attraction> attractionByName) {
+    public static List<Attraction> readAttractionFile() {
         List<City> cities = readCityFile();
         List<Attraction> attractions = new ArrayList<>();
         Path path = Paths.get(ATTRACTION_FILE_PATH);
@@ -104,10 +104,6 @@ public class File {
                 if (matchedCity != null) {
                     Attraction attraction = new Attraction(id, attractionName, matchedCity);
                     attractions.add(attraction);
-
-                    if (attractionByName != null) {
-                        attractionByName.put(attractionName, attraction);
-                    }
                 } else {
                     System.err.println("WARNING: City '" + cityName + "' not found for attraction '" + attractionName + "'");
                 }

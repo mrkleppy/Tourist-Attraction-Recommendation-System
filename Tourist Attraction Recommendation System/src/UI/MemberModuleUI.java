@@ -2,12 +2,15 @@ package UI;
 
 import Class.*;
 import graph.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MemberModuleUI extends UI {
 
     // Member Menu UI
-    public static void memberMenuUI(List<SearchHistory> searchHistories) {
+    public static void memberMenuUI(List<SearchHistory> searchHistories, Graph graph) {
         do {
             System.out.println(underline + "Welcome to Malaysia Tourist Attraction Recommendations!" + reset);
             System.out.println("\t1. View Recommendations\n\t2. View History\n\t0. Exit");
@@ -17,10 +20,10 @@ public class MemberModuleUI extends UI {
             clearScreen();
             switch (choice) {
                 case "1":
-                    stateRecommendationsUI(searchHistories);
+                    stateRecommendationsUI(searchHistories, graph);
                     break;
                 case "2":
-                    viewHistoryUI(searchHistories);
+                    viewHistoryUI(searchHistories, graph);
                     break;
                 case "0":
                     return;
@@ -31,12 +34,7 @@ public class MemberModuleUI extends UI {
     }
 
     // State Recommendations UI
-    public static void stateRecommendationsUI(List<SearchHistory> searchHistories) {
-
-        // Load the graph data for attractions and states
-        Graph graph = new Graph();
-        graph.loadGraph();
-            
+    public static void stateRecommendationsUI(List<SearchHistory> searchHistories, Graph graph) {
         do {
             System.out.println("Enter q to go back...");
             System.out.println(underline + "View Recommendations" + reset);
@@ -64,7 +62,7 @@ public class MemberModuleUI extends UI {
                       
             // Query Attractions for Validated State
             String stateName = matchedState.toString();
-            List<Attraction> attractions = graph.getAttractionsByState(stateName); 
+            List<Attraction> attractions = getAllAttractionsFromState(stateName, graph);
 
             if (attractions.isEmpty()) {
                 System.out.println("No attractions available in " + stateName + ".");
@@ -122,12 +120,7 @@ public class MemberModuleUI extends UI {
     } 
 
     // View History UI
-    public static void viewHistoryUI(List<SearchHistory> searchHistories) {
-
-        // Load the graph data for attractions and states
-        Graph graph = new Graph();
-        graph.loadGraph();
-
+    public static void viewHistoryUI(List<SearchHistory> searchHistories, Graph graph) {
         SearchHistory searchHistory = new SearchHistory();
         
         System.out.println(underline + "Search History" + reset);
@@ -140,7 +133,11 @@ public class MemberModuleUI extends UI {
         }
 
         // Get attractions based on the member's search history (With the most recent searches at the top)
-        List<Attraction> attractions = graph.getAttractionsByHistory(searchHistory);
+        List<Attraction> attractions = new ArrayList<>();
+        
+        for (State state : searchHistory.getStates()) {
+            attractions.addAll(getAllAttractionsFromState(state.name(), graph));
+        }
 
         do {
             System.out.println("\nAccording to your history, you can visit:");
@@ -196,12 +193,30 @@ public class MemberModuleUI extends UI {
         System.out.println("\nIn order to get to " + destination.toString() + " from " + State.formatStateName(start));
         
         // Find the route using the graph's findRouteToAttraction method and display it
-        List<String> route = graph.findRouteToAttraction(destination.getName(), start.name());
+        List<String> route = graph.findShortestPathBFS(start.name(), destination.getName());
         Member.viewRoute(route);
 
         System.out.println("\nPress any key to go back......");
         sc.nextLine();
         
         clearScreen();
+    }
+    
+    // Helper method to gather all Attraction objects across all states via BFS
+    private static List<Attraction> getAllAttractionsFromState(String stateName, Graph graph) {
+        List<Attraction> allAttractionsFromFile = File.readAttractionFile();
+        List<Attraction> attractions = new ArrayList<>();
+        
+        List<Vertex> attractionVertices = graph.findVerticesByTypeBFS(stateName, "ATTRACTION");
+        for (Vertex v : attractionVertices) {
+            // Match graph vertex name with Attraction file objects
+            for (Attraction a : allAttractionsFromFile) {
+                if (a.getName().equalsIgnoreCase(v.getName()) && !attractions.contains(a) && a.getCity().getState().name().equals(stateName)) {
+                    attractions.add(a);
+                    break;
+                }
+            }
+        }
+        return attractions;
     }
 }

@@ -2,16 +2,17 @@ package UI;
 
 import Class.*;
 import graph.*;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Set;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
 public class AdminModuleUI extends UI {
 
     // Main menu for Admin Panel
-    public static void adminMenuUI(List<User> users) {
+    public static void adminMenuUI(Graph graph) {
         do {
             System.out.println("Admin Panel");
             System.out.println("\t1. Add a city\n\t2. Remove a city\n\t3. Create new attraction\n\t4. Remove an attraction\n\t5. View all attractions\n\t0. Exit");
@@ -21,24 +22,19 @@ public class AdminModuleUI extends UI {
             clearScreen();
             switch (choice) {
                 case "1":
-                    System.out.println("Enter 'q' to go back to the previous menu.");
-                    addCityUI();
+                    addCityUI(graph);
                     break;
                 case "2":
-                    System.out.println("Enter 'q' to go back to the previous menu.");
-                    removeCityUI();
+                    removeCityUI(graph);
                     break;
                 case "3":
-                    System.out.println("Enter 'q' to go back to the previous menu.");
-                    addAttractionUI();
+                    addAttractionUI(graph);
                     break;
                 case "4":
-                    System.out.println("Enter 'q' to go back to the previous menu.");
-                    removeAttractionUI();
+                    removeAttractionUI(graph);
                     break;
                 case "5":
-                    System.out.println("Enter 'q' to go back to the previous menu.");
-                    viewAttractionUI();
+                    viewAttractionUI(graph);
                     break;
                 case "0":
                     return;
@@ -51,7 +47,7 @@ public class AdminModuleUI extends UI {
     }
 
     // Add City UI
-    public static void addCityUI() {
+    public static void addCityUI(Graph graph) {
         do {
             System.out.println("Enter 'q' to go back to the previous menu.");
             System.out.println("Add city");
@@ -97,7 +93,7 @@ public class AdminModuleUI extends UI {
                 System.out.println("Error: Current state '" + stateInput + "' not found!");               
             } else {
                 // If the state is found, add the city to the file and display a success message
-                City city = Admin.addCity(cityInput, matchedState);
+                City city = Admin.addCity(cityInput, matchedState, graph);
                 System.out.printf("%s is now in %s!\n", city.getName(), matchedState.toString());
                 return;
             }
@@ -105,21 +101,11 @@ public class AdminModuleUI extends UI {
     }
 
     // Remove City UI
-    public static void removeCityUI() {
+    public static void removeCityUI(Graph graph) {
 
         // Load the list of cities from the file
-        List<City> cities = File.readCityFile();
-        
-        // Load the graph to get the list of attractions
-        Graph graph = new Graph();
-        graph.loadGraph();
-        
-        List<Attraction> attractions = new ArrayList<>();
-        
-        // Iterate through all states and get the attractions for each state, adding them to the attractions list
-        for (State state : State.values()) {
-            attractions.addAll(graph.getAttractionsByState(state.name()));
-        }
+        List<City> cities = File.readCityFile();        
+        List<Attraction> attractions = getAllAttractionsViaGraph(graph);
         
         do {
             System.out.println("Enter 'q' to go back to the previous menu.");
@@ -132,7 +118,7 @@ public class AdminModuleUI extends UI {
             } 
             
             // If the city is found and removed successfully, display a success message; otherwise, display an error message
-            if (Admin.removeCity(cities, cityToRemove, attractions)) {
+            if (Admin.removeCity(cities, cityToRemove, attractions, graph)) {
                 System.out.println("City " + cityToRemove + " is now removed!");
                 return;
             } else {
@@ -142,18 +128,8 @@ public class AdminModuleUI extends UI {
     }
 
     // Add Attraction UI
-    public static void addAttractionUI() {
-
-        // Load the graph to get the list of attractions
-        Graph graph = new Graph();
-        graph.loadGraph();
-        
-        List<Attraction> attractions = new ArrayList<>();
-                
-        // Iterate through all states and get the attractions for each state, adding them to the attractions list
-        for (State state : State.values()) {
-            attractions.addAll(graph.getAttractionsByState(state.name()));
-        }
+    public static void addAttractionUI(Graph graph) {
+        List<Attraction> attractions = getAllAttractionsViaGraph(graph);
         
         do {
             System.out.println("Enter 'q' to go back to the previous menu.");
@@ -200,7 +176,7 @@ public class AdminModuleUI extends UI {
             } else {
                 // If the city is found, generate a new attraction ID, add the attraction to the file, and display a success message
                 String id = Attraction.generateNextAttractionId();
-                Attraction attraction = Admin.addAttraction(id, attractionInput, matchedCity);
+                Attraction attraction = Admin.addAttraction(id, attractionInput, matchedCity, graph);
                 System.out.printf("%s is now in %s!\n", attraction.getName(), matchedCity.getName());
                 return;   
             }
@@ -208,18 +184,8 @@ public class AdminModuleUI extends UI {
     }
 
     // Remove Attraction UI
-    public static void removeAttractionUI() {
-        
-        // Load the graph to get the list of attractions
-        Graph graph = new Graph();
-        graph.loadGraph();
-        
-        List<Attraction> attractions = new ArrayList<>();
-                
-        // Iterate through all states and get the attractions for each state, adding them to the attractions list
-        for (State state : State.values()) {
-            attractions.addAll(graph.getAttractionsByState(state.name()));
-        }
+    public static void removeAttractionUI(Graph graph) {
+        List<Attraction> attractions = getAllAttractionsViaGraph(graph);
         
         do {
             System.out.println("Enter 'q' to go back to the previous menu.");
@@ -232,7 +198,7 @@ public class AdminModuleUI extends UI {
             } 
             
             // If the attraction is found and removed successfully, display a success message; otherwise, display an error message
-            if (Admin.removeAttraction(attractions, attractionToRemove)) {
+            if (Admin.removeAttraction(attractions, attractionToRemove, graph)) {
                 System.out.println("Attraction " + attractionToRemove + " is now removed!");
                 return;
             } else {
@@ -242,12 +208,7 @@ public class AdminModuleUI extends UI {
     }
 
     // View Attraction UI
-    public static void viewAttractionUI() {
-        
-        // Load the graph to get the list of attractions
-        Graph graph = new Graph();
-        graph.loadGraph();
-
+    public static void viewAttractionUI(Graph graph) {
         do {
             System.out.println("Enter 'q' to go back to the previous menu.\n");
             System.out.println(underline + "View attractions" + reset);
@@ -274,7 +235,7 @@ public class AdminModuleUI extends UI {
             }
             
             // Get the list of attractions for the selected state
-            List<Attraction> attractions = graph.getAttractionsByState(selectedState.toString());
+            List<Attraction> attractions = getAllAttractionsFromState(selectedState.name(), graph);
 
             // Format the state name for display purposes
             String stateName = State.formatStateName(selectedState);
@@ -323,6 +284,47 @@ public class AdminModuleUI extends UI {
                 return;
             }
         } while(true);
+    }
+    
+    // Helper method to gather all Attraction objects across all states via BFS
+    private static List<Attraction> getAllAttractionsViaGraph(Graph graph) {
+        List<Attraction> allAttractionsFromFile = File.readAttractionFile();
+        Set<Attraction> attractionSet = new LinkedHashSet<>();
+        List<Attraction> attractions = new ArrayList<>();
+        
+        for (State state : State.values()) {
+            List<Vertex> attractionVertices = graph.findVerticesByTypeBFS(state.name(), "ATTRACTION");
+            for (Vertex v : attractionVertices) {
+                // Match graph vertex name with Attraction file objects
+                for (Attraction a : allAttractionsFromFile) {
+                    if (a.getName().equalsIgnoreCase(v.getName()) && !attractions.contains(a)) {
+                        attractionSet.add(a);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        attractions.addAll(attractionSet);
+        return attractions;
+    }
+    
+    // Helper method to gather all Attraction objects across all states via BFS
+    private static List<Attraction> getAllAttractionsFromState(String stateName, Graph graph) {
+        List<Attraction> allAttractionsFromFile = File.readAttractionFile();
+        List<Attraction> attractions = new ArrayList<>();
+        
+        List<Vertex> attractionVertices = graph.findVerticesByTypeBFS(stateName, "ATTRACTION");
+        for (Vertex v : attractionVertices) {
+            // Match graph vertex name with Attraction file objects
+            for (Attraction a : allAttractionsFromFile) {
+                if (a.getName().equalsIgnoreCase(v.getName()) && !attractions.contains(a) && a.getCity().getState().name().equals(stateName)) {
+                    attractions.add(a);
+                    break;
+                }
+            }
+        }
+        return attractions;
     }
 }
 

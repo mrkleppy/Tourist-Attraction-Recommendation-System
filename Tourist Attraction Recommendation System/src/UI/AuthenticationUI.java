@@ -1,12 +1,13 @@
 package UI;
 
 import Class.*;
+import graph.*;
 import java.util.List;
 
 public class AuthenticationUI extends UI{
 
     // Root menu for authentication (login/register) options
-    public static void loginMenuUI(List<User> users, List<SearchHistory> searchHistories) {
+    public static void loginMenuUI(List<User> users, List<SearchHistory> searchHistories, Graph graph) {
         do {
             System.out.println("\t1. Login as Member\n\t2. Login as Admin\n\t3. Register as Member\n\t0. Exit");
             System.out.print("\nSelection: ");
@@ -15,15 +16,12 @@ public class AuthenticationUI extends UI{
             clearScreen();
             switch (choice) {
                 case "1":
-                    System.out.println("Enter 'q' to go back to the previous menu.");
-                    memberLoginUI(users, searchHistories);
+                    memberLoginUI(users, searchHistories, graph);
                     break;
                 case "2":
-                    System.out.println("Enter 'q' to go back to the previous menu.");
-                    adminLoginUI(users);
+                    adminLoginUI(users, graph);
                     break;
                 case "3":
-                    System.out.println("Enter 'q' to go back to the previous menu.");
                     registerMemberUI(users, searchHistories);
                     break;
                 case "0":
@@ -37,7 +35,7 @@ public class AuthenticationUI extends UI{
     }
 
     // Member Login UI
-    public static void memberLoginUI(List<User> users, List<SearchHistory> searchHistories) {
+    public static void memberLoginUI(List<User> users, List<SearchHistory> searchHistories, Graph graph) {
         do {
             System.out.println("Enter 'q' to go back to the previous menu.");
             System.out.println("Member Login");
@@ -57,7 +55,7 @@ public class AuthenticationUI extends UI{
             if (Authentication.validateLogin(users, username, password, "member")) {
                 // If the login is successful, display a success message and navigate to the member menu UI
                 System.out.println("Login successful!");
-                MemberModuleUI.memberMenuUI(searchHistories);
+                MemberModuleUI.memberMenuUI(searchHistories, graph);
             } else {
                 // If the login fails, display an error message and prompt the user to try again
                 System.out.println("Invalid credentials. Please try again.");
@@ -66,7 +64,7 @@ public class AuthenticationUI extends UI{
     }
 
     // Admin Login UI
-    public static void adminLoginUI(List<User> users) {
+    public static void adminLoginUI(List<User> users, Graph graph) {
         do {
             System.out.println("Enter 'q' to go back to the previous menu.");
             System.out.println("Admin Login");
@@ -86,7 +84,7 @@ public class AuthenticationUI extends UI{
             if (Authentication.validateLogin(users, username, password, "admin")) {
                 // If the login is successful, display a success message and navigate to the admin menu UI
                 System.out.println("Login successful!");
-                AdminModuleUI.adminMenuUI(users);
+                AdminModuleUI.adminMenuUI(graph);
             } else {
                 // If the login fails, display an error message and prompt the user to try again
                  System.out.println("Invalid credentials. Please try again.");

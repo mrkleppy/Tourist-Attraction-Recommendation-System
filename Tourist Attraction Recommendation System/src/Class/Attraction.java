@@ -53,8 +53,7 @@ public class Attraction {
     
     // Generate the next attraction ID based on the existing attractions in the file
     public static String generateNextAttractionId() {
-        Map<String, Attraction> attractionByName = new HashMap<>();
-        List<Attraction> attractions = File.readAttractionFile(attractionByName);
+        List<Attraction> attractions = File.readAttractionFile();
     
         int maxId = 0;
 
