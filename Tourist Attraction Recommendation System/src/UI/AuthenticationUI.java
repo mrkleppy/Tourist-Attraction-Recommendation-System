@@ -1,10 +1,17 @@
 package UI;
 
 import Class.*;
+import graph.*;
 import java.util.List;
 
 public class AuthenticationUI extends UI{
+<<<<<<< Updated upstream
     public static void loginMenuUI(List<User> users, List<SearchHistory> searchHistories) {
+=======
+
+    // Root menu for authentication (login/register) options
+    public static void loginMenuUI(List<User> users, List<SearchHistory> searchHistories, Graph graph) {
+>>>>>>> Stashed changes
         do {
             System.out.println("\t1. Login as Member\n\t2. Login as Admin\n\t3. Register as Member\n\t0. Exit");
             System.out.print("\nSelection: ");
@@ -13,15 +20,12 @@ public class AuthenticationUI extends UI{
             clearScreen();
             switch (choice) {
                 case "1":
-                    System.out.println("Enter 'q' to go back to the previous menu.");
-                    memberLoginUI(users, searchHistories);
+                    memberLoginUI(users, searchHistories, graph);
                     break;
                 case "2":
-                    System.out.println("Enter 'q' to go back to the previous menu.");
-                    adminLoginUI(users);
+                    adminLoginUI(users, graph);
                     break;
                 case "3":
-                    System.out.println("Enter 'q' to go back to the previous menu.");
                     registerMemberUI(users, searchHistories);
                     break;
                 case "0":
@@ -34,7 +38,12 @@ public class AuthenticationUI extends UI{
         } while(true);
     }
 
+<<<<<<< Updated upstream
     public static void memberLoginUI(List<User> users, List<SearchHistory> searchHistories) {
+=======
+    // Member Login UI
+    public static void memberLoginUI(List<User> users, List<SearchHistory> searchHistories, Graph graph) {
+>>>>>>> Stashed changes
         do {
             System.out.println("Member Login");
             System.out.print("Enter username: ");
@@ -50,14 +59,19 @@ public class AuthenticationUI extends UI{
             clearScreen();
             if (Authentication.validateLogin(users, username, password, "member")) {
                 System.out.println("Login successful!");
-                MemberModuleUI.memberMenuUI(searchHistories);
+                MemberModuleUI.memberMenuUI(searchHistories, graph);
             } else {
                 System.out.println("Invalid credentials. Please try again.");
             }
         } while(true);
     }
 
+<<<<<<< Updated upstream
     public static void adminLoginUI(List<User> users) {
+=======
+    // Admin Login UI
+    public static void adminLoginUI(List<User> users, Graph graph) {
+>>>>>>> Stashed changes
         do {
             System.out.println("Admin Login");
             System.out.print("Enter username: ");
@@ -73,7 +87,7 @@ public class AuthenticationUI extends UI{
             clearScreen();
             if (Authentication.validateLogin(users, username, password, "admin")) {
                 System.out.println("Login successful!");
-                AdminModuleUI.adminMenuUI(users);
+                AdminModuleUI.adminMenuUI(graph);
             } else {
                 System.out.println("Invalid credentials. Please try again.");
             }

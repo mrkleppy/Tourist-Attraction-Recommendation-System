@@ -47,8 +47,7 @@ public class Attraction {
     }
     
     public static String generateNextAttractionId() {
-        Map<String, Attraction> attractionByName = new HashMap<>();
-        List<Attraction> attractions = File.readAttractionFile(attractionByName);
+        List<Attraction> attractions = File.readAttractionFile();
     
         int maxId = 0;
 
