@@ -4,27 +4,33 @@ import java.util.Objects;
 import java.util.List;
 
 public class City {
+    
+    // Attributes
     private String name;
     private State state;
     private int totalAttraction;
 
+    // Default constructor
     public City(){
         this.name = "";
         this.state = null;
         this.totalAttraction = 0;
     }
 
+    // Parameterised constructor
     public City(String name, State state) {
         this.name = name;
         this.state = state;
     }
 
+    // Parameterised constructor with totalAttraction
     public City(String name, State state, int totalAttraction){
         this.name = name;
         this.state = state;
         this.totalAttraction = totalAttraction;
     }
 
+    // Accessor and Mutator methods
     public String getName(){
         return name;
     }
@@ -49,15 +55,21 @@ public class City {
         this.totalAttraction = totalAttraction;
     }
 
+    // Normalise the city input to remove whitespace and convert to uppercase
     private static String normaliseCityInput(String input) {
         return input == null ? "" : input.trim().replaceAll("\\s+","".toUpperCase());
     }
 
+    // Find a city by its name from the list of cities
     public static City findCity(String input) {
+
+        // Normalise the input first
         String normalisedInput = normaliseCityInput(input);
 
+        // Read the list of cities from the file
         List<City> cities = File.readCityFile();
 
+        // Iterate through the list of cities to find a match for the normalised input
         for (City city : cities) {
             String normalisedCityName = normaliseCityInput(city.getName());
             if (normalisedCityName.equalsIgnoreCase(normalisedInput)) {

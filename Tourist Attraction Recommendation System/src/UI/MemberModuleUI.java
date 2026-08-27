@@ -8,13 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 public class MemberModuleUI extends UI {
-<<<<<<< Updated upstream
-    public static void memberMenuUI(List<SearchHistory> searchHistories) {
-=======
 
     // Member Menu UI
     public static void memberMenuUI(List<SearchHistory> searchHistories, Graph graph) {
->>>>>>> Stashed changes
         do {
             System.out.println(underline + "Welcome to Malaysia Tourist Attraction Recommendations!" + reset);
             System.out.println("\t1. View Recommendations\n\t2. View History\n\t0. Exit");
@@ -37,22 +33,14 @@ public class MemberModuleUI extends UI {
         } while(true);
     }
 
-<<<<<<< Updated upstream
-    public static void stateRecommendationsUI(List<SearchHistory> searchHistories) {
-        Graph graph = new Graph();
-        graph.loadGraph();
-            
-=======
     // State Recommendations UI
     public static void stateRecommendationsUI(List<SearchHistory> searchHistories, Graph graph) {
->>>>>>> Stashed changes
         do {
             System.out.println("Enter q to go back...");
             System.out.println(underline + "View Recommendations" + reset);
             System.out.print("Enter a state: ");
             String stateInput = sc.nextLine();
 
-            clearScreen();
             if (stateInput.equalsIgnoreCase("q")) {
                 clearScreen();
                 return;
@@ -61,6 +49,7 @@ public class MemberModuleUI extends UI {
             // Validate State Input
             State matchedState = State.findState(stateInput);
             if (matchedState == null) {
+                clearScreen();
                 System.out.println("Error: State '" + stateInput + "' not found! Please try again.");
                 continue;
             } else {
@@ -111,13 +100,14 @@ public class MemberModuleUI extends UI {
                 System.out.print("What state are you currently in? ");
                 String userLocationInput = sc.nextLine().trim();
 
-                clearScreen();
                 if (userLocationInput.equalsIgnoreCase("q")) {
+                    clearScreen();
                     break;
                 }
 
                 State userState = State.findState(userLocationInput);
                 if (userState == null) {
+                    clearScreen();
                     System.out.println("Error: Current state '" + userLocationInput + "' not found!");
                     continue;
                 }
@@ -129,34 +119,25 @@ public class MemberModuleUI extends UI {
         } while (true);
     } 
 
-<<<<<<< Updated upstream
-    public static void viewHistoryUI(List<SearchHistory> searchHistories) {
-        Graph graph = new Graph();
-        graph.loadGraph();
-=======
     // View History UI
     public static void viewHistoryUI(List<SearchHistory> searchHistories, Graph graph) {
->>>>>>> Stashed changes
         SearchHistory searchHistory = new SearchHistory();
         
         System.out.println(underline + "Search History" + reset);
 
+        // Find the search history for the currently logged-in member
         for (int i = 0; i < searchHistories.size(); i++) {
             if (searchHistories.get(i).getMember().getUsername().equals(Authentication.getCurrentUser())) {
                 searchHistory = searchHistories.get(i);
             }
         }
 
-<<<<<<< Updated upstream
-        List<Attraction> attractions = graph.getAttractionsByHistory(searchHistory);
-=======
         // Get attractions based on the member's search history (With the most recent searches at the top)
         List<Attraction> attractions = new ArrayList<>();
         
         for (State state : searchHistory.getStates()) {
             attractions.addAll(getAllAttractionsFromState(state.name(), graph));
         }
->>>>>>> Stashed changes
 
         do {
             System.out.println("\nAccording to your history, you can visit:");
@@ -172,7 +153,7 @@ public class MemberModuleUI extends UI {
 
             Attraction selectedAttraction = null;
             for (Attraction a : attractions) {
-                if (a.getName().equalsIgnoreCase(attractionInput)) {
+                if (a.getId().equalsIgnoreCase(attractionInput)) {
                     selectedAttraction = a;
                     break;
                 }
@@ -188,13 +169,14 @@ public class MemberModuleUI extends UI {
             System.out.print("What state are you currently in? ");
             String userLocationInput = sc.nextLine().trim();
 
-            clearScreen();
             if (userLocationInput.equalsIgnoreCase("q")) {
+                clearScreen();
                 break;
             }
 
             State userState = State.findState(userLocationInput);
             if (userState == null) {
+                clearScreen();
                 System.out.println("Error: Current state '" + userLocationInput + "' not found!");
                 continue;
             }
@@ -206,14 +188,12 @@ public class MemberModuleUI extends UI {
     }
     
     public static void locationGetterUI(Attraction destination, State start, Graph graph) {
-        System.out.println("In order to get to " + destination.toString() + " from " + State.formatStateName(start));
+
+        // Display the route from the user's current state to the selected attraction
+        System.out.println("\nIn order to get to " + destination.toString() + " from " + State.formatStateName(start));
         
-<<<<<<< Updated upstream
-        List<String> route = graph.findRouteToAttraction(destination.getName(), start.name());
-=======
         // Find the route using the graph's findRouteToAttraction method and display it
         List<String> route = graph.findShortestPathBFS(start.name(), destination.getName());
->>>>>>> Stashed changes
         Member.viewRoute(route);
 
         System.out.println("\nPress any key to go back......");

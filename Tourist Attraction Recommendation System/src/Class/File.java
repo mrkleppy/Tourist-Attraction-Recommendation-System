@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class File {
 
+    // Constants for file paths
     private static final String CITY_FILE_PATH = "src/Data/City.csv";
     private static final String ATTRACTION_FILE_PATH = "src/Data/Attraction.csv";
     private static final String USER_FILE_PATH = "src/Data/Credential.csv";
@@ -62,7 +63,6 @@ public class File {
     public static List<Attraction> readAttractionFile() {
         List<City> cities = readCityFile();
         List<Attraction> attractions = new ArrayList<>();
-        // Fixed: pointed to Attraction.csv instead of City.csv
         Path path = Paths.get(ATTRACTION_FILE_PATH);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
@@ -223,6 +223,7 @@ public class File {
 
     public static void appendAttractionFile(Attraction attraction) {
         Path path = Paths.get(ATTRACTION_FILE_PATH);
+        // Formats attraction output explicitly as "ID, AttractionName, CityName"
         String contentToAppend = attraction.getId() + ", " +attraction.getName() + ", " + attraction.getCity().getName();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile(), true))) {
@@ -235,6 +236,7 @@ public class File {
 
     public static void appendCredentialFile(User user) {
         Path path = Paths.get(USER_FILE_PATH);
+        // Formats user output explicitly as "Username, Password, Role"
         String contentToAppend = user.getUsername() + "," + user.getPassword() + "," + (user instanceof Admin ? "admin" : "member");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile(), true))) {
@@ -247,7 +249,7 @@ public class File {
     
     public static void appendSearchHistoryFile(SearchHistory searchHistory) {
         Path path = Paths.get(SEARCHHISTORY_FILE_PATH);
-        
+        // Formats search history output explicitly as "Username, State1, State2, ..."
         String contentToAppend = searchHistory.getMember().getUsername();
         ArrayList<State> states = searchHistory.getStates();
         

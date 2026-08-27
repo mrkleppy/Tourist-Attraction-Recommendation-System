@@ -7,24 +7,17 @@ import java.util.Iterator;
 import graph.*;
 
 public class Admin extends User {
+    
+    // Default constructor
     public Admin() {
         super("", "", "admin");
     }
 
+    // Parameterised constructor
     public Admin(String username, String password) {
         super(username, password, "admin");
     }
     
-<<<<<<< Updated upstream
-    public static City addCity(String cityInput, State matchedState) {
-        City city = new City(cityInput, matchedState);
-        File.appendCityFile(city);
-        
-        return city;
-    }
-    
-    public static boolean removeCity(List<City> cities, String cityToRemove, List<Attraction> attractions) {
-=======
     // Add City function
     public static City addCity(String cityInput, State matchedState, Graph graph) {
         // Construct an object for the new city
@@ -46,14 +39,14 @@ public class Admin extends User {
     // Remove City function
     public static boolean removeCity(List<City> cities, String cityToRemove, List<Attraction> attractions, Graph graph) {
         // For-each loop to identify the matching city with the city name input
->>>>>>> Stashed changes
         for (City city : cities) {
             if (city.getName().equalsIgnoreCase(cityToRemove)) {
+                // Removes the city in the cities list in memory
                 cities.remove(city);
+                
+                // Updates the file with the removed city
                 File.overwriteCityFile(cities);
                 
-<<<<<<< Updated upstream
-=======
                 // Update in the graph
                 if (graph != null) {
                     graph.removeVertex(city.getName());
@@ -62,37 +55,25 @@ public class Admin extends User {
                 // Create a temporary arraylist of every attractions
                 // To remove all of the attractions that is in the removed city
                 // Without this, some atraction may still not be deleted
->>>>>>> Stashed changes
                 List<Attraction> temp = new ArrayList<>(attractions);
                 
+                // Removes all of the attrations that is in the city
                 for (Attraction attraction : temp) {
                     if (attraction.getCity().equals(city)) {
-<<<<<<< Updated upstream
-                        removeAttraction(attractions, attraction.getName());
-=======
                         // Calls the remove attraction function to remove the attraction
                         removeAttraction(attractions, attraction.getName(), graph);
->>>>>>> Stashed changes
                     }
                 }
                 
+                // Once done removing, set the flag to true, notifying that the city has been successfully deleted
                 return true;
             }
         }
         
+        // When it fails to remove, it will return false flag
         return false;
     }
     
-<<<<<<< Updated upstream
-    public static Attraction addAttraction(String id, String attractionInput, City matchedCity) {
-        Attraction attraction = new Attraction(id, attractionInput, matchedCity);
-        File.appendAttractionFile(attraction);
-        
-        return attraction;
-    }
-    
-    public static boolean removeAttraction(List<Attraction> attractions, String attractionToRemove) {
-=======
     public static Attraction addAttraction(String id, String attractionInput, City matchedCity, Graph graph) {
         // Builds the object for the newAttraction
         Attraction newAttraction = new Attraction(id, attractionInput, matchedCity);
@@ -112,41 +93,35 @@ public class Admin extends User {
     
     public static boolean removeAttraction(List<Attraction> attractions, String attractionToRemove, Graph graph) {
         // Use an iterator to iterate through the attractions
->>>>>>> Stashed changes
         Iterator<Attraction> it = attractions.iterator();
+        
+        // A flag to check whether an attraction has been successfully removed
         boolean removed = false;
         
-<<<<<<< Updated upstream
-=======
         String removedAttractionName = null;
         
         // When the iterator still has a next element, we keep executing the function.
->>>>>>> Stashed changes
         while (it.hasNext()) {
-            Attraction attraction = it.next();
+            // Set the temporary attraction to the next attraction.
+            Attraction temporaryAttraction = it.next();
 
-<<<<<<< Updated upstream
-            if (attraction.getName().equalsIgnoreCase(attractionToRemove) ||
-                attraction.getId().equalsIgnoreCase(attractionToRemove)) {
-=======
             // Checks if the temporary attraction is equal to the name or the ID
             if (temporaryAttraction.getName().equalsIgnoreCase(attractionToRemove) ||
                 temporaryAttraction.getId().equalsIgnoreCase(attractionToRemove)) {
                 // If yes, we remove it from the iterator and set the removed flag to true, to indicate success removal
                 removedAttractionName = temporaryAttraction.getName();
->>>>>>> Stashed changes
                 it.remove();
                 removed = true;
+                
+                // Break out of the while-loop so program doesn't have to iterate through all of the attractions
                 break;
             }
         }
 
+        // If it fails to remove, return a false flag to indicate failure
         if (!removed) {
             return false;
         }
-<<<<<<< Updated upstream
-
-=======
         
         // Update in graph
         if (graph != null && removedAttractionName != null) {
@@ -154,11 +129,12 @@ public class Admin extends User {
         }
         
         // Reassign every attractions with a new ID according to the iterator (follows sequence in STATE.java)
->>>>>>> Stashed changes
         for (int i = 0; i < attractions.size(); i++) {
+            // Get the attraction then set the id and increment it everytime
             attractions.get(i).setId(String.format("A%04d", i+1));
         }
         
+        // Updates to the file with the new updated assigned IDs
         File.overwriteAttractionFile(attractions);
         return true;
     }
